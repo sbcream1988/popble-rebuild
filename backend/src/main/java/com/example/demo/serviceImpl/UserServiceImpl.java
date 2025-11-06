@@ -108,4 +108,17 @@ public class UserServiceImpl implements UserService {
 		String randomNick = UUID.randomUUID().toString().substring(0,6);
 		return "user_" + randomNick;
 	}
+	
+	// 회원 로그인 // ToDo: 시큐리티 적용 후 주석 처리 또는 삭제
+	public UserDTO login(String email, String password) {
+		//이메일로 사용자 조회
+		User user = userRepository.findByEmail(email)
+					.orElseThrow(() -> new RuntimeException("해당 아이디의 유저가 존재하지 않습니다"));
+		//비밀 번호 검증
+		if(!passwordEncoder.matches(password, user.getPassword())) {
+			throw new RuntimeException("비밀번호가 일치 하지 않습니다.");
+		}
+		//로그인 성공
+		return UserMapper.toDTO(user);
+	}
 }
