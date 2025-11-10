@@ -61,7 +61,7 @@ export const getAllUsers = async () => {
 //로그인
 export const login = async (email, password) => {
   try {
-    const response = await axios.post(`${host}/login`, email, password);
+    const response = await axios.post(`${host}/login`, { email, password });
     return response.data;
   } catch (error) {
     console.error("로그인 중 오류가 발생했습니다: ", error);

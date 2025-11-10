@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,7 +43,7 @@ public class User {
 	
 	// 비밀번호
 	@Column(nullable = false)
-	@NotEmpty
+	@NotBlank
 	private String password;
 	
 	// 권한
@@ -73,6 +74,7 @@ public class User {
 	// OAuth관련
 	// 공급업체
 	@Column(name = "provider")
+	@Enumerated(EnumType.STRING)
 	private Provider provider;
 	
 	// 아이디
