@@ -8,7 +8,7 @@ function SignupComponent() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
+    // watch,
     control,
   } = useForm({
     defaultValues: {
@@ -83,7 +83,7 @@ function SignupComponent() {
         {/* 닉네임 */}
         <InputField label="닉네임" name="nickname" register={register} />
         {/* 생일 */}
-        <div className="flex flex-col">
+        <div className="flex flex-row justify-center items-center">
           <label className="mb-1 font-medium">생일</label>
           <Controller
             control={control}
@@ -122,7 +122,7 @@ function SignupComponent() {
         {/* 회원 가입 버튼 */}
         <button
           type="submit"
-          className="m-2 p-3 rounded-4xl bg-blue-400 flex justify-center"
+          className="m-2 p-3 rounded-4xl bg-blue-400 flex justify-center cursor-pointer"
         >
           회원가입
         </button>
