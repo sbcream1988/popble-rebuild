@@ -35,6 +35,12 @@ function Navbar() {
         >
           마이페이지
         </Link>
+        <Link
+          to="/user/login"
+          className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
+        >
+          로그인
+        </Link>
       </nav>
       {/* 햄버거 버튼 모바일 또는 크기 작을때 */}
       <button onClick={() => setOpen(!open)} className="md:hidden p-2">
@@ -70,6 +76,13 @@ function Navbar() {
             onClick={() => setOpen(false)}
           >
             마이페이지
+          </Link>
+          <Link
+            to="/user/login"
+            className="p-2 hover:font-bold"
+            onClick={() => setOpen(false)}
+          >
+            로그인
           </Link>
         </div>
       )}

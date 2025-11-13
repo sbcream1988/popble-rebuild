@@ -1,8 +1,10 @@
+import LoginComponent from "../../components/user/LoginComponent";
+
 function LoginPage() {
   return (
     <div>
       <div>
-        <h1 className="font-extrabold text-9xl">Login Page</h1>
+        <LoginComponent></LoginComponent>
       </div>
     </div>
   );

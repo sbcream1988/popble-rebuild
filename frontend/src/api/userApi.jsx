@@ -6,7 +6,7 @@ const host = `${API_SERVER_HOST}/api/user`;
 //회원 가입
 export const signup = async (userDTO) => {
   try {
-    const response = await axios.put(`${host}/signup`, userDTO);
+    const response = await axios.post(`${host}/signup`, userDTO);
     return response.data;
   } catch (error) {
     console.error("회원가입 중 오류가 발생했습니다: ", error);
