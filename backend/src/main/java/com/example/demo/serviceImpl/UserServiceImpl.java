@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		// DTO -> Entity
 		User user = UserMapper.toEntity(userDTO, passwordEncoder);
 		if(user.getRole() == null) {
-			user.setRole(Role.USER);
+			user.setRole(Role.ROLE_USER);
 		}
 		
 		// DB에 저장
