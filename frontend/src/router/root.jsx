@@ -6,6 +6,7 @@ import freeBoardRouter from "./freeBoardRouter";
 const Home = lazy(() => import("../pages/MainPage"));
 const User = lazy(() => import("../pages/user/UserPage"));
 const FreeBoard = lazy(() => import("../pages/board/FreeBoardPage"));
+const Board = lazy(() => import("../pages/board/BoardPage"));
 
 const root = createBrowserRouter([
   {
@@ -26,13 +27,36 @@ const root = createBrowserRouter([
     children: userRouter,
   },
   {
-    path: "board/free",
+    path: "board",
     element: (
       <Suspense fallback={"..."}>
-        <FreeBoard></FreeBoard>
+        <Board></Board>
       </Suspense>
     ),
-    children: freeBoardRouter,
+    children: [
+      //자유게시판
+      {
+        path: "free",
+        element: (
+          <Suspense fallback={"..."}>
+            <FreeBoard />
+          </Suspense>
+        ),
+        children: freeBoardRouter,
+      },
+      //공지
+      {
+        path: "notice",
+      },
+      //질문게시판
+      {
+        path: "qna",
+      },
+      //홍보
+      {
+        path: "promo",
+      },
+    ],
   },
 ]);
 

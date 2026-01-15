@@ -21,6 +21,4 @@ public interface UserService {
 	// 전체 회원 조회
 	List<UserDTO> getAllUsers();
 	
-	// 로그인 ToDo: 시큐리티 적용 후 주석 또는 삭제
-	UserDTO login(String email, String password);
 }

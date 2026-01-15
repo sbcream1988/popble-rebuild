@@ -93,7 +93,7 @@ public class User implements UserDetails {
 	
 	@Override 
 	public Collection<? extends GrantedAuthority> getAuthorities(){
-		return List.of();//기본은 빈 권한
+		return List.of(()-> role.name());//기본은 빈 권한
 		
 	}
 	

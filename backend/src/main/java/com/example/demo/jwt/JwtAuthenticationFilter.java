@@ -19,11 +19,11 @@ import jakarta.servlet.http.HttpServletResponse;
 public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
 	private final TokenProvider tokenProvider;
-	private final CustomUserDetailsService customeUserDetailsService;
+	private final CustomUserDetailsService customUserDetailsService;
 	
 	public JwtAuthenticationFilter(TokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService) {
 		this.tokenProvider = tokenProvider;
-		this.customeUserDetailsService = customUserDetailsService;
+		this.customUserDetailsService = customUserDetailsService;
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 		if(token!=null && tokenProvider.validateToken(token)) {
 			Long userId = tokenProvider.getUserId(token);
 			
-			UserDetails userDetails = customeUserDetailsService.loadByUserId(userId);
+			UserDetails userDetails = customUserDetailsService.loadByUserId(userId);
 			
 			UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
 			
@@ -50,5 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 			return bearer.substring(7);
 		}
 		return null;
+	}
+	
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) {
+		String path = request.getServletPath();
+		return path.startsWith("/api/auth/login") ||
+				path.startsWith("/api/user/signup")||
+				path.startsWith("/api/board");
 	}
 }

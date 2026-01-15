@@ -55,9 +55,5 @@ public class UserController {
 		return ResponseEntity.ok(userService.getAllUsers());
 	}
 	
-	// 회원 로그인 //ToDo: 시큐리티 적용 후 주석 처리 또는 삭제
-	@PostMapping("/login")
-	public ResponseEntity<UserDTO> login(@RequestBody UserDTO userDTO){
-		return ResponseEntity.ok(userService.login(userDTO.getEmail(), userDTO.getPassword()));
-	}
+
 }

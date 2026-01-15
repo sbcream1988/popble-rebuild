@@ -33,7 +33,7 @@ public class FreeBoardController {
 	
 	// 글 가져오기
 	@GetMapping("/{id}")
-	public ResponseEntity<FreeBoard> get(@PathVariable Long id){
+	public ResponseEntity<FreeBoard> get(@PathVariable(name = "id") Long id){
 		return ResponseEntity.ok(freeBoardService.get(id));
 	}
 	
@@ -45,13 +45,13 @@ public class FreeBoardController {
 	
 	// 글 수정
 	@PatchMapping("/{id}")
-	public ResponseEntity<FreeBoard> update(@PathVariable Long id, @RequestBody BoardDTO boardDTO){
+	public ResponseEntity<FreeBoard> update(@PathVariable(name = "id") Long id, @RequestBody BoardDTO boardDTO){
 		return ResponseEntity.ok(freeBoardService.update(id, boardDTO));
 	}
 	
 	// 글 삭제
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Long id){
+	public ResponseEntity<String> delete(@PathVariable(name = "id") Long id){
 		freeBoardService.delete(id);
 		return ResponseEntity.ok("삭제 완료");
 	}

@@ -3,6 +3,8 @@ package com.example.demo.serviceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.FreeBoard;
@@ -28,9 +30,14 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 	
 	// 글 작성
 	public FreeBoard create(BoardDTO boardDTO) {
-		User user = userRepository.findById(boardDTO.getWriter().getId())
-				.orElseThrow(()-> new RuntimeException("사용자를 찾을 수 없습니다"));
-		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = null;
+		if(auth != null&& auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
+			String email = (String)auth.getPrincipal();
+			user = userRepository.findByEmail(email)
+					.orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
+		}
+				
 		FreeBoard freeBoard = FreeBoard.builder()
 				.title(boardDTO.getTitle())
 				.content(boardDTO.getContent())

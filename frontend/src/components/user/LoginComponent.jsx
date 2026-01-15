@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { login } from "../../api/userApi";
 
 function LoginComponent() {
   const {
@@ -10,9 +11,15 @@ function LoginComponent() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    console.log("로그인 시도", data);
-    //아이디 체크
-    //비밀번호 체크
+    try {
+      const loginResponse = await login(data.email, data.password);
+      console.log("로그인 성공:", loginResponse);
+
+      localStorage.setItem("accessToken", loginResponse.accessToken);
+    } catch (e) {
+      console.error("로그인실패:", e.response?.data || e.message);
+      alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요");
+    }
   };
 
   return (

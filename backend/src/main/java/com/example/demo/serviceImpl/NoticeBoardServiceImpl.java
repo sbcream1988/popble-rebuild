@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.domain.NoticeBoard;
@@ -28,8 +29,10 @@ public class NoticeBoardServiceImpl {
 	
 	// 글 생성
 	public NoticeBoard create(NoticeBoardDTO noticeBoardDTO) {
-		User user = userRepository.findById(noticeBoardDTO.getWriter().getId())
-				.orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다"));
+		User user = (User) SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getPrincipal();
 		
 		NoticeBoard noticeBoard = NoticeBoard.builder()
 				.title(noticeBoardDTO.getTitle())

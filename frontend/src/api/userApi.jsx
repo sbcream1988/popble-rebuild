@@ -3,6 +3,19 @@ import { API_SERVER_HOST } from "../api/apiConfig";
 
 const host = `${API_SERVER_HOST}/api/user`;
 
+const jwtAxios = axios.create({
+  baseURL: host,
+  withCredentials: true,
+});
+
+jwtAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("accessToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 //회원 가입
 export const signup = async (userDTO) => {
   try {
@@ -61,7 +74,10 @@ export const getAllUsers = async () => {
 //로그인
 export const login = async (email, password) => {
   try {
-    const response = await axios.post(`${host}/login`, { email, password });
+    const response = await axios.post(`${API_SERVER_HOST}/api/auth/login`, {
+      email,
+      password,
+    });
     return response.data;
   } catch (error) {
     console.error("로그인 중 오류가 발생했습니다: ", error);

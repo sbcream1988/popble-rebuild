@@ -19,7 +19,8 @@ public class BoardDTO {
 	
 	private String content;
 	
-	private User writer;
+	//현재 jwt 문제로 인하여 잠시 제거
+//	private User writer;
 	
 	private LocalDateTime createdAt;
 	
