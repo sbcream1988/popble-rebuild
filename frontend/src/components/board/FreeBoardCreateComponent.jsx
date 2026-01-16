@@ -46,6 +46,7 @@ const FreeBoardCreateComponent = () => {
           <textarea
             className="w-full border border-sky-700 p-2 m-2 rounded"
             value={content}
+            rows={20}
             onChange={(e) => setContent(e.target.value)}
             placeholder="내용을 입력하세요"
             required

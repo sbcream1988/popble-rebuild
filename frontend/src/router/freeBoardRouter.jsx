@@ -7,6 +7,7 @@ const List = lazy(() => import("../components/board/FreeBoardListComponent"));
 const Detail = lazy(() =>
   import("../components/board/FreeBoardDetailComponent")
 );
+const Edit = lazy(() => import("../components/board/FreeBoardEditComponent"));
 
 const freeBoardRouter = [
   //게시글 작성
@@ -39,7 +40,11 @@ const freeBoardRouter = [
   //글 수정
   {
     path: ":id/edit",
-    element: <Suspense fallback={"..."}></Suspense>,
+    element: (
+      <Suspense fallback={"..."}>
+        <Edit></Edit>
+      </Suspense>
+    ),
   },
 ];
 

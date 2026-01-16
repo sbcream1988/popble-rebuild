@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { getBoard } from "../../api/freeBoardApi";
 
 const FreeBoardDetailComponent = () => {
@@ -24,21 +24,43 @@ const FreeBoardDetailComponent = () => {
       </h1>
       {/* 작성자, 일자 */}
       <div className="border-b border-sky-700">
-        <div className="flex justify-start">
+        <div className="flex justify-between">
           <div className="p-2 font-bold text-sm">
             작성자: {board.writer?.email ?? "익명"}
           </div>
-        </div>
-        <div className="flex justify-end">
-          <div className="p-2 font-bold text-sm">조회수: </div>
-          <div className="p-2 font-bold text-sm">추천수: </div>
-          <div className="p-2 font-bold text-sm">
-            작성일: {board.createdAt?.substring(0, 10)}
+          <div className="flex justify-end">
+            <div className="p-2 font-bold text-sm">조회수: </div>
+            <div className="p-2 font-bold text-sm">추천수: </div>
+            <div className="p-2 font-bold text-sm">
+              작성일: {board.createdAt?.substring(0, 10)}
+            </div>
           </div>
         </div>
       </div>
       {/* 내용 */}
-      <div className="p-2 m-2 flex justify-start">{board.content}</div>
+      <div className="p-2 m-2 flex justify-start border-b border-sky-700">
+        {board.content}
+      </div>
+      {/* 수정, 삭제 */}
+      <div className="p-2 m-2 flex justify-between border-b border-sky-700">
+        <Link to={".."}>
+          <button className="p-2 m-2 rounded-2xl bg-sky-300 w-20 h-10 hover:bg-sky-400">
+            목록
+          </button>
+        </Link>
+        <div>
+          <Link to={"edit"}>
+            <button className="p-2 m-2 rounded-2xl bg-sky-300 w-20 h-10 hover:bg-sky-400">
+              수정
+            </button>
+          </Link>
+          <Link to={"delete"}>
+            <button className="p-2 m-2 rounded-2xl bg-sky-300 w-20 h-10 hover:bg-sky-400">
+              삭제
+            </button>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 };

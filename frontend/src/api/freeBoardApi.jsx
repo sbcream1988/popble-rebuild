@@ -49,7 +49,7 @@ export const getBoard = async (id) => {
   }
 };
 // 글 수정
-export const updateBoard = async (id, boardDTO) => {
+export const editBoard = async (id, boardDTO) => {
   try {
     const response = await jwtAxios.patch(`${host}/${id}`, boardDTO);
     return response.data;
