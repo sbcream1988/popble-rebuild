@@ -2,7 +2,6 @@ package com.example.demo.domain;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,33 +18,47 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+//예약
 @Entity
-@Table(name = "freeboard")
+@Table(name = "reservation")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeBoard {
+public class Reservation {
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "freeboard_id")
+	@Column(name = "reservation_id")
 	private Long id;
 	
-	private String title;
-	
-	@Column(columnDefinition = "TEXT")
-	private String content;
-	
+	//팝업
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User writer;
+	@JoinColumn(name = "popup_id")
+	private Popup popup;
 	
+	//예약 시간
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "popup_reservation_slot_id")
+	private PopupReservationSlot popupReservationSlot;
+	
+	//예약자 이름
+	//(나중에 인증되면 User로 교체)
+	private String reserverName;
+	
+	//전화번호
+	private String phoneNumber;
+	
+	//예약 인원
+	private int count;
+	
+	//예약 생성 시간
 	private LocalDateTime createdAt;
 	
-	private LocalDateTime updatedAt;
-	
-	private int viewCount = 0;
-	
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = LocalDateTime.now();
+	}
 }
