@@ -1,4 +1,4 @@
-import { Link, Outlet, NavLink } from "react-router";
+import { Outlet, NavLink } from "react-router";
 import BasicLayout from "../../layouts/BasicLayout";
 
 const boardTab = "p-2 text-2xl border border-sky-700 rounded-t-xl -mb-px";

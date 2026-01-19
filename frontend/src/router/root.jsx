@@ -2,6 +2,8 @@ import { createBrowserRouter } from "react-router";
 import { lazy, Suspense } from "react";
 import userRouter from "./userRouter";
 import freeBoardRouter from "./freeBoardRouter";
+import popupRouter from "./popupRouter";
+import PopupPage from "../pages/popup/PopupPage";
 
 const Home = lazy(() => import("../pages/MainPage"));
 const User = lazy(() => import("../pages/user/UserPage"));
@@ -57,6 +59,16 @@ const root = createBrowserRouter([
         path: "promo",
       },
     ],
+  },
+  //팝업 라우터
+  {
+    path: "popup",
+    element: (
+      <Suspense fallback={"..."}>
+        <PopupPage></PopupPage>
+      </Suspense>
+    ),
+    children: popupRouter,
   },
 ]);
 
