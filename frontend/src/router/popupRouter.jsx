@@ -5,6 +5,12 @@ const Create = lazy(() => import("../components/popup/popupCreateComponent"));
 const List = lazy(() => import("../components/popup/PopupListComponent"));
 const Detail = lazy(() => import("../components/popup/PopupDetailComponent"));
 const DetailPage = lazy(() => import("../pages/popup/PopupDetailPage"));
+const Image = lazy(() => import("../components/popup/PopupImageComponent"));
+const Map = lazy(() => import("../components/popup/PopupMapComponent"));
+const Reservation = lazy(
+  () => import("../components/popup/PopupReservationComponent"),
+);
+const Review = lazy(() => import("../components/popup/PopupReviewComponent"));
 
 const popupRouter = [
   // 팝업스토어 등록
@@ -27,7 +33,7 @@ const popupRouter = [
     path: ":id",
     element: (
       <Suspense fallback={"..."}>
-        <DetailPage></DetailPage>
+        <DetailPage />
       </Suspense>
     ),
     children: [
@@ -35,21 +41,41 @@ const popupRouter = [
         index: true,
         element: (
           <Suspense fallback={"..."}>
-            <PopupDetailComponent></PopupDetailComponent>
+            <Detail />
           </Suspense>
         ),
       },
       {
         path: "image",
+        element: (
+          <Suspense fallback={"..."}>
+            <Image />
+          </Suspense>
+        ),
       },
       {
         path: "map",
+        element: (
+          <Suspense fallback={"..."}>
+            <Map />
+          </Suspense>
+        ),
       },
       {
         path: "reservation",
+        element: (
+          <Suspense fallback={"..."}>
+            <Reservation />
+          </Suspense>
+        ),
       },
       {
         path: "review",
+        element: (
+          <Suspense fallback={"..."}>
+            <Review />
+          </Suspense>
+        ),
       },
     ],
   },

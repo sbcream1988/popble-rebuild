@@ -2,6 +2,7 @@ package com.example.demo.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +18,8 @@ public class PopupReservationSlotResponseDTO {
 	private LocalDate date;
 	
 	// 시작, 종료일
-	private LocalDateTime startTime;
-	private LocalDateTime endTime;
+	private LocalTime startTime;
+	private LocalTime endTime;
 	
 	// 최대 인원
 	private int maxCount;

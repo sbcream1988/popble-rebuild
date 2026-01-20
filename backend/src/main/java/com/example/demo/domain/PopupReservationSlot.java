@@ -45,18 +45,23 @@ public class PopupReservationSlot {
 	private Popup popup;
 	
 	// 예약 날짜
+	@Column(nullable = false)
 	private LocalDate date;
 	
 	// 시작시간
+	@Column(nullable = false)
 	private LocalTime startTime;
 	
 	// 종료시간
+	@Column(nullable = false)
 	private LocalTime endTime;
 	
 	// 해당 시간 최대 인원
+	@Column(nullable = false)
 	private int maxCount;
 	
 	// 현재 예약 인원(기본 0)
+	@Column(nullable = false)
 	private int currentCount = 0;
 	
 	//예약 가능 여부(현재 예약 인원 요청인원 >= 최대 count보다 작게)
