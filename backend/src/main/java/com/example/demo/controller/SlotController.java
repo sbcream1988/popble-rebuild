@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.PopupReservationSlotRequestDTO;
@@ -50,7 +52,13 @@ public class SlotController {
 	
 	//팝업별 슬롯조회
 	@GetMapping("/popup/{popupId}/slots")
-	public List<PopupReservationSlotResponseDTO> getSlotsByPopup(@PathVariable("popupId") Long popupId){
+	public List<PopupReservationSlotResponseDTO> getSlotsByPopup(@PathVariable(name="popupId") Long popupId){
 		return slotService.getSlotsByPopup(popupId);
+	}
+	
+	//팝업별 슬롯 날짜 조회
+	@GetMapping("/popup/{popupId}/slots/date")
+	public List<PopupReservationSlotResponseDTO> getSlotsByPopupAndDate(@PathVariable(name = "popupId") Long popupId, @RequestParam(name = "date") LocalDate date){
+		return slotService.getSlotsByPopupAndDate(popupId, date);
 	}
 }

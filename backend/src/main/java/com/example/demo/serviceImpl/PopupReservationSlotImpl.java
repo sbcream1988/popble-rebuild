@@ -10,8 +10,6 @@ import com.example.demo.domain.Popup;
 import com.example.demo.domain.PopupReservationSlot;
 import com.example.demo.dto.PopupReservationSlotRequestDTO;
 import com.example.demo.dto.PopupReservationSlotResponseDTO;
-import com.example.demo.dto.PopupResponseDTO;
-import com.example.demo.dto.ReservationResponseDTO;
 import com.example.demo.repository.PopupRepository;
 import com.example.demo.repository.PopupReservationSlotRepository;
 import com.example.demo.service.PopupReservationSlotService;
