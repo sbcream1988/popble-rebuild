@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.domain.Popup;
 import com.example.demo.dto.PopupCardDTO;
 import com.example.demo.dto.PopupCreateRequestDTO;
+import com.example.demo.dto.PopupReservationSlotResponseDTO;
 import com.example.demo.dto.PopupResponseDTO;
 import com.example.demo.dto.PopupUpdateRequestDTO;
 import com.example.demo.repository.PopupRepository;
@@ -112,6 +113,7 @@ public class PopupServiceImpl implements PopupService {
 				.maxCapacity(popup.getMaxCapacity())
 				.viewCount(popup.getViewCount())
 				.createdAt(popup.getCreatedAt())
+				
 				.build();
 	}
 

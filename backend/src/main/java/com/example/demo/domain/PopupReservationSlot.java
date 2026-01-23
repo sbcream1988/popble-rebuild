@@ -26,7 +26,7 @@ import lombok.Setter;
 @Table(
 		name = "popup_reservation_slot", 
 		//같은 팝업에 같은 시간 같은 날짜 중복 방지
-		uniqueConstraints = @UniqueConstraint(columnNames = {"popup_id","date","startTime"}))
+		uniqueConstraints = @UniqueConstraint(columnNames = {"popup_id","date","start_time"}))
 @Getter
 @Setter
 @Builder

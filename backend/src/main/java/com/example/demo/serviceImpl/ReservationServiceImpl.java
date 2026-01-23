@@ -38,6 +38,19 @@ public class ReservationServiceImpl implements ReservationService {
 		PopupReservationSlot slot =  slotRepository.findById(request.getPopupReservationSlotId())
 								.orElseThrow(()->new IllegalArgumentException("해당 슬롯을 찾을 수 없습니다"));
 		
+		//슬롯 검증(해당 팝업에 속하는지부터 확인)
+		if(!slot.getPopup().getId().equals(popup.getId())) {
+			throw new IllegalStateException("해당 슬롯은 이 팝업의 슬롯이 아닙니다");
+		}
+		
+		//예약 가능 여부 확인
+		if(!slot.isAvailable(request.getCount())) {
+			throw new IllegalStateException("해당 시간대 예약 가능 인원을 초과했습니다");
+		}
+		
+		//슬롯 인원 추가
+		slot.increaseCount(request.getCount());
+		
 		Reservation reservation = Reservation.builder()
 								.popup(popup)
 								.popupReservationSlot(slot)

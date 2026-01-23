@@ -24,7 +24,7 @@ public class ReservationController {
 	private final ReservationService reservationService;
 	
 	//예약 생성
-	@PostMapping
+	@PostMapping("/")
 	public ReservationResponseDTO createReserve(@RequestBody ReservationRequestDTO request) {
 		
 		return reservationService.createReserve(request);
