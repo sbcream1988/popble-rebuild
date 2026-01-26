@@ -6,13 +6,16 @@ import java.util.List;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.FreeBoard;
 import com.example.demo.domain.User;
-import com.example.demo.dto.BoardDTO;
+import com.example.demo.dto.FreeBoardRequestDTO;
+import com.example.demo.dto.FreeBoardResponseDTO;
 import com.example.demo.repository.FreeBoardRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FreeBoardService;
+import com.example.demo.util.SecurityUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,46 +27,96 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 	private final UserRepository userRepository;
 	
 	// 전체 목록 가져오기
-	public List<FreeBoard> getList(){
-		return freeBoardRepository.findAll();
+	@Transactional(readOnly = true)
+	public List<FreeBoardResponseDTO> getList(){
+		return freeBoardRepository.findAll().stream()
+				.map(board->new FreeBoardResponseDTO(board.getId(), board.getTitle(), board.getContent(), board.getWriter().getNickname(), board.getCreatedAt(), board.getUpdatedAt()))
+				.toList();
 	}
 	
 	// 글 작성
-	public FreeBoard create(BoardDTO boardDTO) {
+	@Transactional
+	public FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = null;
-		if(auth != null&& auth.isAuthenticated() && !"anonymousUser".equals(auth.getPrincipal())) {
-			String email = (String)auth.getPrincipal();
-			user = userRepository.findByEmail(email)
-					.orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
+		if(auth == null || !(auth.getPrincipal() instanceof User user)) {
+			throw new RuntimeException("로그인이 필요합니다");
 		}
-				
-		FreeBoard freeBoard = FreeBoard.builder()
-				.title(boardDTO.getTitle())
-				.content(boardDTO.getContent())
-				.writer(user)
-				.createdAt(LocalDateTime.now())
-				.build();
 		
-		return freeBoardRepository.save(freeBoard);
+		
+		FreeBoard board = FreeBoard.builder()
+						.title(requestDTO.getTitle())
+						.content(requestDTO.getContent())
+						.createdAt(LocalDateTime.now())
+						.writer(user)
+						.build();
+		
+		freeBoardRepository.save(board);
+		
+		return FreeBoardResponseDTO.builder()
+				.id(board.getId())
+				.title(board.getTitle())
+				.content(board.getContent())
+				.nickname(board.getWriter().getNickname())
+				.createdAt(board.getCreatedAt())
+				.build();
 	}
 	
+	@Transactional(readOnly = true)
 	// 글 가져오기
-	public FreeBoard get(Long id) {
-		return freeBoardRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+	public FreeBoardResponseDTO get(Long id) {
+		FreeBoard freeBoard =  freeBoardRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		
+		return FreeBoardResponseDTO.builder()
+				.id(freeBoard.getId())
+				.title(freeBoard.getTitle())
+				.content(freeBoard.getContent())
+				.nickname(freeBoard.getWriter().getNickname())
+				.createdAt(freeBoard.getCreatedAt())
+				.updatedAt(freeBoard.getUpdatedAt())
+				.build();
 	}
 	
 	// 글 수정
-	public FreeBoard update(Long id, BoardDTO boardDTO) {
+	@Transactional
+	public FreeBoardResponseDTO update(Long id, FreeBoardRequestDTO boardDTO) {
 		FreeBoard freeBoard =  freeBoardRepository.findById(id).orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		
+		Long currentUserId = SecurityUtil.getCurrentUserId();
+		
+		if(!freeBoard.getWriter().getId().equals(currentUserId)) {
+			throw new RuntimeException("수정 권한이 없습니다.");
+		}
+		
+		if(boardDTO.getTitle() != null) {
+			freeBoard.setTitle(boardDTO.getTitle());
+		}
+		if(boardDTO.getContent() != null) {
+			freeBoard.setContent(boardDTO.getContent());
+		}
+		
 		freeBoard.setTitle(boardDTO.getTitle());
 		freeBoard.setContent(boardDTO.getContent());
 		freeBoard.setUpdatedAt(LocalDateTime.now());;
-		return freeBoardRepository.save(freeBoard);
+		return FreeBoardResponseDTO.builder()
+				.id(freeBoard.getId())
+				.title(freeBoard.getTitle())
+				.content(freeBoard.getContent())
+				.updatedAt(freeBoard.getUpdatedAt())
+				.build();
 	}
 	
 	// 글 삭제
+	@Transactional
 	public void delete(Long id) {
+		FreeBoard board = freeBoardRepository.findById(id)
+						.orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+		
+		Long currentUserId = SecurityUtil.getCurrentUserId();
+		
+		if(!board.getWriter().getId().equals(currentUserId)) {
+			throw new RuntimeException("삭제 권한이 없습니다");
+		}
+		
 		freeBoardRepository.deleteById(id);
 	}
 }

@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.domain.FreeBoard;
-import com.example.demo.dto.BoardDTO;
+import com.example.demo.dto.FreeBoardRequestDTO;
+import com.example.demo.dto.FreeBoardResponseDTO;
 import com.example.demo.service.FreeBoardService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,26 +28,26 @@ public class FreeBoardController {
 	
 	// 목록 가져오기
 	@GetMapping("/list")
-	public ResponseEntity<List<FreeBoard>> list(){
+	public ResponseEntity<List<FreeBoardResponseDTO>> list(){
 		return ResponseEntity.ok(freeBoardService.getList());
 	}
 	
 	// 글 가져오기
 	@GetMapping("/{id}")
-	public ResponseEntity<FreeBoard> get(@PathVariable(name = "id") Long id){
+	public ResponseEntity<FreeBoardResponseDTO> get(@PathVariable(name = "id") Long id){
 		return ResponseEntity.ok(freeBoardService.get(id));
 	}
 	
 	// 글 등록
 	@PostMapping
-	public ResponseEntity<FreeBoard> create(@RequestBody BoardDTO boardDTO){
-		return ResponseEntity.ok(freeBoardService.create(boardDTO));
+	public ResponseEntity<FreeBoardResponseDTO> create(@RequestBody FreeBoardRequestDTO requestDTO){
+		return ResponseEntity.ok(freeBoardService.create(requestDTO));
 	}
 	
 	// 글 수정
 	@PatchMapping("/{id}")
-	public ResponseEntity<FreeBoard> update(@PathVariable(name = "id") Long id, @RequestBody BoardDTO boardDTO){
-		return ResponseEntity.ok(freeBoardService.update(id, boardDTO));
+	public ResponseEntity<FreeBoardResponseDTO> update(@PathVariable(name = "id") Long id, @RequestBody FreeBoardRequestDTO requestDTO){
+		return ResponseEntity.ok(freeBoardService.update(id, requestDTO));
 	}
 	
 	// 글 삭제
