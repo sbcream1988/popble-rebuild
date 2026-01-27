@@ -1,5 +1,6 @@
 package com.example.demo.serviceImpl;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -8,12 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.domain.Popup;
 import com.example.demo.domain.PopupReservationSlot;
 import com.example.demo.domain.Reservation;
+import com.example.demo.domain.User;
 import com.example.demo.dto.ReservationRequestDTO;
 import com.example.demo.dto.ReservationResponseDTO;
+import com.example.demo.mapper.ReservationMapper;
 import com.example.demo.repository.PopupRepository;
 import com.example.demo.repository.PopupReservationSlotRepository;
 import com.example.demo.repository.ReservationRepository;
 import com.example.demo.repository.ReviewBoardRepository;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ReservationService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,12 +30,20 @@ public class ReservationServiceImpl implements ReservationService {
 	private final ReservationRepository reservationRepository;
 	private final PopupRepository popupRepository;
 	private final PopupReservationSlotRepository slotRepository;
+	private final UserRepository userRepository;
 	
 	//예약 생성
 	@Override
 	@Transactional
-	public ReservationResponseDTO createReserve(ReservationRequestDTO request) {
+	public ReservationResponseDTO createReserve(ReservationRequestDTO request, Long userId) {
 		
+		User user = null;
+		if(userId !=null) {
+			user = userRepository.findById(userId)
+					.orElseThrow(()->new IllegalArgumentException("해당 유저를 찾을 수 없습니다"));
+			request.setReserverName(user.getNickname());
+		}
+				
 		Popup popup = popupRepository.findById(request.getPopupId())
 					.orElseThrow(()->new IllegalArgumentException("해당 팝업을 찾을 수 없습니다"));
 		
@@ -51,33 +63,27 @@ public class ReservationServiceImpl implements ReservationService {
 		//슬롯 인원 추가
 		slot.increaseCount(request.getCount());
 		
-		Reservation reservation = Reservation.builder()
-								.popup(popup)
-								.popupReservationSlot(slot)
-								.reserverName(request.getReserverName())
-								.phoneNumber(request.getPhoneNumber())
-								.count(request.getCount())
-								.build();
+		Reservation reservation = ReservationMapper.toEntity(request, popup, slot);
+		if(user!=null) {
+			reservation.setReserver(user);
+		}
 		
 		reservationRepository.save(reservation);
 		
-		return ReservationResponseDTO.builder()
-				.id(reservation.getId())
-				.popupTitle(reservation.getPopup().getTitle())
-				.reserverName(reservation.getReserverName())
-				.phoneNumber(reservation.getPhoneNumber())
-				.count(reservation.getCount())
-				.build();
+		return ReservationMapper.fromEntity(reservation);
 	}
 	
 	//예약 변경
 	@Override
 	@Transactional
-	public ReservationResponseDTO editReserve(Long reserveId, ReservationRequestDTO request) {
+	public ReservationResponseDTO editReserve(Long reserveId, ReservationRequestDTO request, Long userId) {
 		
 		Reservation reservation = reservationRepository.findById(reserveId)
 								.orElseThrow(()->  new IllegalArgumentException("해당 예약이 존재하지 않습니다"));
 		
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
+				
 		reservation.setReserverName(request.getReserverName());
 		reservation.setPhoneNumber(request.getPhoneNumber());
 		reservation.setCount(request.getCount());
@@ -90,18 +96,13 @@ public class ReservationServiceImpl implements ReservationService {
 			reservation.setPopupReservationSlot(slot);
 		}
 			
-		return ReservationResponseDTO.builder()
-				.id(reservation.getId())
-				.popupTitle(reservation.getPopup().getTitle())
-				.reserverName(reservation.getReserverName())
-				.phoneNumber(reservation.getPhoneNumber())
-				.count(reservation.getCount())
-				.build();
+		return ReservationMapper.fromEntity(reservation);
 	}
+	
 	//예약 취소
 	@Override
 	@Transactional
-	public void cancelReserve(Long reserveId) {
+	public void cancelReserve(Long reserveId,Long userId) {
 		Reservation reservation = reservationRepository.findById(reserveId)
 								.orElseThrow(()->new IllegalArgumentException("해당 예약이 존재하지 않습니다"));
 		
@@ -111,17 +112,11 @@ public class ReservationServiceImpl implements ReservationService {
 	//예약 조회
 	@Override
 	@Transactional(readOnly = true)
-	public ReservationResponseDTO getReserve(Long reserveId) {
+	public ReservationResponseDTO getReserve(Long reserveId,Long userId) {
 		Reservation reservation = reservationRepository.findById(reserveId)
 								.orElseThrow(()->new IllegalArgumentException("해당 예약이 존재하지 않습니다"));
 		
-		return ReservationResponseDTO.builder()
-				.id(reserveId)
-				.popupTitle(reservation.getPopup().getTitle())
-				.reserverName(reservation.getReserverName())
-				.phoneNumber(reservation.getPhoneNumber())
-				.count(reservation.getCount())
-				.build();
+		return ReservationMapper.fromEntity(reservation);
 	}
 	
 	//예약 리스트 조회(슬롯 기준)
@@ -130,13 +125,7 @@ public class ReservationServiceImpl implements ReservationService {
 	public List<ReservationResponseDTO> getReserveBySlot(Long slotId) {
 
 		return reservationRepository.findByPopupReservationSlot_Id(slotId).stream()
-				.map(reservation->ReservationResponseDTO.builder()
-						.id(reservation.getId())
-						.popupTitle(reservation.getPopup().getTitle())
-						.reserverName(reservation.getReserverName())
-						.phoneNumber(reservation.getPhoneNumber())
-						.count(reservation.getCount())
-						.build())
+				.map(reservation-> ReservationMapper.fromEntity(reservation))
 				.toList();
 	}
 }

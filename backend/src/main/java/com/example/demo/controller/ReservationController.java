@@ -1,6 +1,11 @@
 package com.example.demo.controller;
 
+import java.security.Principal;
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.ReservationRequestDTO;
 import com.example.demo.dto.ReservationResponseDTO;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.ReservationService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,38 +27,42 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/reservations")
 public class ReservationController {
 
+	
 	private final ReservationService reservationService;
 	
 	//예약 생성
 	@PostMapping("/")
-	public ReservationResponseDTO createReserve(@RequestBody ReservationRequestDTO request) {
+	public ResponseEntity<ReservationResponseDTO> createReserve(@RequestBody ReservationRequestDTO request, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		
-		return reservationService.createReserve(request);
+		return ResponseEntity.ok(reservationService.createReserve(request,customUserDetails.getUserId()));
 	}
 	
 	//예약 수정
 	@PatchMapping("/{reserveId}")
-	public ReservationResponseDTO editReserve(@PathVariable(name = "reserveId") Long reserveId, @RequestBody ReservationRequestDTO request) {
+	public ResponseEntity<ReservationResponseDTO> editReserve(@PathVariable(name = "reserveId") Long reserveId, @RequestBody ReservationRequestDTO request, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		
-		return reservationService.editReserve(reserveId, request);
+		return ResponseEntity.ok(reservationService.editReserve(reserveId, request, customUserDetails.getUserId())) ;
 	}
 	
 	//예약 삭제
 	@DeleteMapping("/{reserveId}")
-	public void cancelReserve(@PathVariable(name = "reserveId") Long reserveId) {
+	public ResponseEntity<String> cancelReserve(@PathVariable(name = "reserveId") Long reserveId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		
-		reservationService.cancelReserve(reserveId);
+		reservationService.cancelReserve(reserveId, customUserDetails.getUserId());
+		
+		return ResponseEntity.ok("예약이 취소되었습니다");
 	}
 	
 	@GetMapping("/{reserveId}")
-	public ReservationResponseDTO getReserve(@PathVariable("reserveId") Long reserveId) {
+	public ResponseEntity<ReservationResponseDTO> getReserve(@PathVariable("reserveId") Long reserveId,@AuthenticationPrincipal CustomUserDetails customUserDetails) {
 		
-		return reservationService.getReserve(reserveId);
+		return ResponseEntity.ok(reservationService.getReserve(reserveId, customUserDetails.getUserId()));
 	}
 	
+	@PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_ADMIN')")
 	@GetMapping("/slot/{slotId}")
-	public List<ReservationResponseDTO> getReserveBySlot(@PathVariable(name = "slotId") Long slotId){
+	public ResponseEntity<List<ReservationResponseDTO>> getReserveBySlot(@PathVariable(name = "slotId") Long slotId){
 		
-		return reservationService.getReserveBySlot(slotId);
+		return ResponseEntity.ok(reservationService.getReserveBySlot(slotId));
 	}
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.domain.User;
 import com.example.demo.dto.LoginRequestDTO;
 import com.example.demo.dto.LoginResponseDTO;
-import com.example.demo.jwt.TokenProvider;
+import com.example.demo.security.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
 

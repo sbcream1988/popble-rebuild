@@ -11,14 +11,14 @@ public interface FreeBoardService {
 	List<FreeBoardResponseDTO> getList(); 
 	
 	//작성
-	FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO);
+	FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO,Long userId);
 	
 	//게시글 가져오기
 	FreeBoardResponseDTO get(Long id);
 	
 	//게시글 수정
-	FreeBoardResponseDTO update(Long id, FreeBoardRequestDTO requestDTO);
+	FreeBoardResponseDTO update(Long id, FreeBoardRequestDTO requestDTO, Long userId);
 	
 	//게시글 삭제
-	void delete(Long id);
+	void delete(Long id, Long userId);
 }

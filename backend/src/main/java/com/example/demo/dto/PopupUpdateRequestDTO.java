@@ -24,8 +24,8 @@ public class PopupUpdateRequestDTO {
 	private LocalDate endDate;
 	
 	//가격
-	private int price;
+	private Integer price;
 	
 	//최대인원
-	private int maxCapacity;
+	private Integer maxCapacity;
 }

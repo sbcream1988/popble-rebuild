@@ -44,8 +44,12 @@ public class Reservation {
 	@JoinColumn(name = "popup_reservation_slot_id")
 	private PopupReservationSlot popupReservationSlot;
 	
-	//예약자 이름
-	//(나중에 인증되면 User로 교체)
+	//예약자(비회원 예약 가능하게 nullable)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id",nullable = true)
+	private User reserver;
+	
+	//예약자 이름(실제 예약자 이름)
 	private String reserverName;
 	
 	//전화번호

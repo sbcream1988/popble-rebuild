@@ -10,13 +10,13 @@ import com.example.demo.dto.PopupUpdateRequestDTO;
 public interface PopupService {
 
 	//팝업 등록
-	PopupResponseDTO createPopup(PopupCreateRequestDTO popupCreateRequestDTO);
+	PopupResponseDTO createPopup(PopupCreateRequestDTO popupCreateRequestDTO,Long userId);
 	
 	//팝업 수정
-	PopupResponseDTO updatePopup(Long popupId,PopupUpdateRequestDTO popupUpdateRequestDTO);
+	PopupResponseDTO updatePopup(Long popupId,PopupUpdateRequestDTO popupUpdateRequestDTO, Long userId);
 	
 	//팝업 삭제
-	void deletePopup(Long popupId);
+	void deletePopup(Long popupId, Long userId);
 	
 	//팝업 조회
 	PopupResponseDTO getPopup(Long popupId);

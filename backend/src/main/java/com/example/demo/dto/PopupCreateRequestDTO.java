@@ -28,5 +28,5 @@ public class PopupCreateRequestDTO {
 	private int price;
 	
 	//최대 수용인원
-	private int maxCapacity;
+	private Integer maxCapacity;
 }

@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,6 +18,7 @@ import com.example.demo.dto.PopupCardDTO;
 import com.example.demo.dto.PopupCreateRequestDTO;
 import com.example.demo.dto.PopupResponseDTO;
 import com.example.demo.dto.PopupUpdateRequestDTO;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.PopupService;
 import com.example.demo.serviceImpl.PopupServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -29,31 +33,35 @@ public class PopupController {
 	
 	//팝업 등록
 	@PostMapping("/create")
-	public PopupResponseDTO create(@RequestBody PopupCreateRequestDTO requestDTO) {
-		return popupService.createPopup(requestDTO);
+	@PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_ADMIN')")
+	public ResponseEntity<PopupResponseDTO> create(@RequestBody PopupCreateRequestDTO requestDTO, @AuthenticationPrincipal CustomUserDetails custUserDetails) {
+		return ResponseEntity.ok(popupService.createPopup(requestDTO, custUserDetails.getUserId()));
 	}
 	
 	//팝업 수정
 	@PatchMapping("/{id}")
-	public PopupResponseDTO edit(@PathVariable(name = "id") Long popupId, @RequestBody PopupUpdateRequestDTO requestDTO) {
-		return popupService.updatePopup(popupId, requestDTO);
+	@PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_ADMIN')")
+	public ResponseEntity<PopupResponseDTO> edit(@PathVariable(name = "id") Long popupId, @RequestBody PopupUpdateRequestDTO requestDTO, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+		return ResponseEntity.ok(popupService.updatePopup(popupId, requestDTO,customUserDetails.getUserId()));
 	}
 	
 	//팝업 삭제
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable(name = "id") Long popupId) {
-		popupService.deletePopup(popupId);
+	@PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_ADMIN')")
+	public ResponseEntity<String> delete(@PathVariable(name = "id") Long popupId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+		popupService.deletePopup(popupId, customUserDetails.getUserId());
+		return ResponseEntity.ok("팝업이 삭제되었습니다");
 	}
 	
 	//팝업 조회
 	@GetMapping("/{id}")
-	public PopupResponseDTO get(@PathVariable(name = "id") Long popupId) {
-		return popupService.getPopup(popupId);
+	public ResponseEntity<PopupResponseDTO> get(@PathVariable(name = "id") Long popupId) {
+		return ResponseEntity.ok(popupService.getPopup(popupId));
 	}
 	
 	//팝업 카드 조회
 	@GetMapping("/list")
-	public List<PopupCardDTO> getList(){
-		return popupService.getPopupCards();
+	public ResponseEntity<List<PopupCardDTO>> getList(){
+		return ResponseEntity.ok(popupService.getPopupCards());
 	}
 }

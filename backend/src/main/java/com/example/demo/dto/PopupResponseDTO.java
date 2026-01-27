@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;import com.example.demo.domain.PopupReservationSlot;
 
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +36,7 @@ public class PopupResponseDTO {
 	private int price;
 	
 	//최대 수용인원
-	private int maxCapacity;
+	private Integer maxCapacity;
 	
 	//조회수
 	private int viewCount;
@@ -44,4 +46,6 @@ public class PopupResponseDTO {
 	
 	//예약 가능시간
 	private List<PopupReservationSlotResponseDTO> slots;
+	
+
 }
