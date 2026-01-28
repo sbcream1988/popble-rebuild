@@ -23,4 +23,5 @@ public class PopupReservationSlotRequestDTO {
 	
 	//해당 시간 최대 인원
 	private int maxCount;
+	
 }

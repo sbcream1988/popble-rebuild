@@ -69,7 +69,17 @@ public class PopupReservationSlot {
 		return currentCount + requestCount <=maxCount;
 	}
 	
+	//증가
 	public void increaseCount(int count) {
 		this.currentCount += count;
+	}
+	
+	//감소
+	public void decreaseCount(int count) {
+		//0보다 작아지면 x
+		if(this.currentCount - count <0) {
+			throw new IllegalStateException("슬롯 인원 오류: 0보다 작을수 없습니다");
+		}
+		this.currentCount -= count;
 	}
 }

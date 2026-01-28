@@ -10,11 +10,11 @@ public interface PopupReservationSlotService {
 
 	//관리
 	// 슬롯 등록
-	PopupReservationSlotResponseDTO createSlot(Long popupId, PopupReservationSlotRequestDTO request);
+	PopupReservationSlotResponseDTO createSlot(Long popupId, PopupReservationSlotRequestDTO request, Long userId);
 	// 슬롯 수정
-	PopupReservationSlotResponseDTO editSlot(Long slotId, PopupReservationSlotRequestDTO request);
+	PopupReservationSlotResponseDTO editSlot(Long slotId, PopupReservationSlotRequestDTO request, Long userId);
 	// 슬롯 삭제
-	void deleteSlot(Long slotId);
+	void deleteSlot(Long slotId,Long userId);
 	
 	//조회
 	// 슬롯 조회

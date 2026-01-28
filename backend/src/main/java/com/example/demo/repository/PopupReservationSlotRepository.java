@@ -10,17 +10,22 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.demo.domain.PopupReservationSlot;
 
-public interface PopupReservationSlotRepository extends JpaRepository<PopupReservationSlot, Long>{
+public interface PopupReservationSlotRepository extends JpaRepository<PopupReservationSlot, Long> {
 
 	// 특정날짜조회
 	List<PopupReservationSlot> findByPopupIdAndDateOrderByStartTime(Long poopupId, LocalDate date);
-	
+
 	// 슬롯 단건 조회
 	Optional<PopupReservationSlot> findById(Long id);
-	
+
 	// 슬롯 중복 체크
-	boolean existsByPopupIdAndDateAndStartTime(Long popupId, LocalDate date, LocalTime time);
-	
+	boolean existsByPopupIdAndDateAndStartTimeLessThanAndEndTimeGreaterThan(Long popupId, LocalDate date,
+			LocalTime endTime, LocalTime startTime);
+
 	// 슬롯 중복 체크(자신 슬롯 제외)
-	boolean existsByPopupIdAndDateAndStartTimeAndIdNot(Long popupId, LocalDate date, LocalTime time, Long slotId);
+	boolean existsByPopupIdAndDateAndStartTimeLessThanAndEndTimeGreaterThanAndIdNot(Long popupId, LocalDate date,
+			LocalTime endTime, LocalTime startTime, Long slotId);
+
+	// 슬롯 리스트 조회
+	List<PopupReservationSlot> findByPopupIdOrderByDateAscStartTimeAsc(Long popupId);
 }

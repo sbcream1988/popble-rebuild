@@ -16,7 +16,6 @@ import com.example.demo.mapper.ReservationMapper;
 import com.example.demo.repository.PopupRepository;
 import com.example.demo.repository.PopupReservationSlotRepository;
 import com.example.demo.repository.ReservationRepository;
-import com.example.demo.repository.ReviewBoardRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.ReservationService;
 
@@ -83,19 +82,46 @@ public class ReservationServiceImpl implements ReservationService {
 		
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다"));
-				
+		PopupReservationSlot oldSlot = reservation.getPopupReservationSlot();
+		int oldCount = reservation.getCount();
+		
+		Long newSlotId = request.getPopupReservationSlotId();
+		
+		//슬롯 변경이 없는 경우
+		if(newSlotId == null || newSlotId.equals(oldSlot.getId())) {
+			int newCount = request.getCount();
+			int diff = newCount - oldCount;
+			
+			if(diff > 0) {
+				if(!oldSlot.isAvailable(diff)) {
+					throw new IllegalStateException("해당시간 예약 가능 인원을 초과했습니다");
+				}
+				oldSlot.increaseCount(diff);
+			}else if(diff < 0) {
+				oldSlot.decreaseCount(-diff);
+			}
+		}
+		
+		//슬롯이 변경되는 경우
+		else {
+			PopupReservationSlot newSlot = slotRepository.findById(newSlotId)
+					.orElseThrow(()->new IllegalArgumentException("해당 슬롯이 존재하지 않습니다"));
+			
+			oldSlot.decreaseCount(oldCount);
+			
+			if(!newSlot.isAvailable(request.getCount())) {
+				throw new IllegalStateException("해당 시간대 에약 가능 인원을 초과했습니다");
+			}
+			
+			newSlot.increaseCount(request.getCount());
+			reservation.setPopupReservationSlot(newSlot);
+		}
+
 		reservation.setReserverName(request.getReserverName());
 		reservation.setPhoneNumber(request.getPhoneNumber());
 		reservation.setCount(request.getCount());
 		
-		//슬롯 변경 필요시
-		if(request.getPopupReservationSlotId() != null) {
-			PopupReservationSlot slot = slotRepository.findById(request.getPopupReservationSlotId())
-									.orElseThrow(()->new IllegalArgumentException("해당 슬롯이 존재하지 않습니다"));
 
-			reservation.setPopupReservationSlot(slot);
-		}
-			
 		return ReservationMapper.fromEntity(reservation);
 	}
 	
@@ -105,6 +131,11 @@ public class ReservationServiceImpl implements ReservationService {
 	public void cancelReserve(Long reserveId,Long userId) {
 		Reservation reservation = reservationRepository.findById(reserveId)
 								.orElseThrow(()->new IllegalArgumentException("해당 예약이 존재하지 않습니다"));
+		
+		PopupReservationSlot slot = reservation.getPopupReservationSlot();
+		
+		//슬롯인원 감소
+		slot.decreaseCount(reservation.getCount());
 		
 		reservationRepository.delete(reservation);
 	}
