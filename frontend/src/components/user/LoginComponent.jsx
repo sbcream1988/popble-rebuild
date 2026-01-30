@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
-import { login } from "../../api/userApi";
+import { Link, useNavigate } from "react-router";
+import { login } from "../../api/AuthApi";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "../../store/authSlice";
 
 function LoginComponent() {
   const {
@@ -10,12 +12,27 @@ function LoginComponent() {
     // control,
   } = useForm();
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     try {
       const loginResponse = await login(data.email, data.password);
       console.log("로그인 성공:", loginResponse);
 
-      localStorage.setItem("accessToken", loginResponse.accessToken);
+      dispatch(
+        loginSuccess({
+          accessToken: loginResponse.accessToken,
+          user: {
+            userId: loginResponse.userId,
+            nickname: loginResponse.nickname,
+            email: loginResponse.email,
+            role: loginResponse.role,
+          },
+        }),
+      );
+
+      navigate("/");
     } catch (e) {
       console.error("로그인실패:", e.response?.data || e.message);
       alert("로그인 실패: 이메일 또는 비밀번호를 확인해주세요");

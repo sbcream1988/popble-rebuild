@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
 
 public class CustomUserDetails implements UserDetails {
@@ -16,18 +17,20 @@ public class CustomUserDetails implements UserDetails {
 	private Long userId;
 	private String email;
 	private String password;
-	private String role;
+	private Role role;
+	private String nickname;
 	
 	public CustomUserDetails(User user) {
 		this.userId = user.getId();
 		this.email = user.getEmail();
 		this.password = user.getPassword();
-		this.role = user.getRole().name();
+		this.role = user.getRole();
+		this.nickname = user.getNickname();
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return List.of(new SimpleGrantedAuthority(role));
+		return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
 	}
 
 	public Long getUserId() {
@@ -42,6 +45,14 @@ public class CustomUserDetails implements UserDetails {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+	
+	public String getNickname() {
+		return nickname;
 	}
 	
 	@Override

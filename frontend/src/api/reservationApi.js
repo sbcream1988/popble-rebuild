@@ -1,14 +1,22 @@
-import axios from "axios";
-import { API_SERVER_HOST } from "./apiConfig";
+import jwtAxios from "../util/jwtAxios";
 
-const host = `${API_SERVER_HOST}/api/reservations`;
+// -----인증 필요한 API-----
 
-//차후에 비회원이 예약-> axios // 회원이 예약 jwtAxios
+//슬롯의 예약 조회 (팝업 담당자)
+export const getReserveBySlot = async (id) => {
+  try {
+    const response = await jwtAxios.get(`/api/reservation/slot/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 //예약 생성
 export const createReserve = async (requestDTO) => {
   try {
-    const response = await axios.post(`${host}/`, requestDTO);
+    const response = await jwtAxios.post(`/api/reservation/`, requestDTO);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -19,7 +27,7 @@ export const createReserve = async (requestDTO) => {
 //예약 수정
 export const editReserve = async (id, requestDTO) => {
   try {
-    const response = await axios.patch(`${host}/${id}`, requestDTO);
+    const response = await jwtAxios.patch(`/api/reservation/${id}`, requestDTO);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -30,7 +38,7 @@ export const editReserve = async (id, requestDTO) => {
 //예약 취소
 export const cancelReserve = async (id) => {
   try {
-    const response = await axios.delete(`${host}/${id}`);
+    const response = await jwtAxios.delete(`/api/reservation/${id}`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -41,18 +49,7 @@ export const cancelReserve = async (id) => {
 //예약 조회
 export const getReserve = async (id) => {
   try {
-    const response = await axios.get(`${host}/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-//슬롯의 예약 조회
-export const getReserveBySlot = async (id) => {
-  try {
-    const response = await axios.get(`${host}/slot/${id}`);
+    const response = await jwtAxios.get(`/api/reservation/${id}`);
     return response.data;
   } catch (error) {
     console.error(error);

@@ -36,7 +36,7 @@ function Navbar() {
           마이페이지
         </Link>
         <Link
-          to="/user/login"
+          to="/auth/login"
           className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
         >
           로그인
@@ -78,7 +78,7 @@ function Navbar() {
             마이페이지
           </Link>
           <Link
-            to="/user/login"
+            to="/auth/login"
             className="p-2 hover:font-bold"
             onClick={() => setOpen(false)}
           >

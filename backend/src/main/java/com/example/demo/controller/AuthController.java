@@ -16,7 +16,7 @@ import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
 import com.example.demo.dto.LoginRequestDTO;
 import com.example.demo.dto.LoginResponseDTO;
-import com.example.demo.security.CustomUserDetailsService;
+import com.example.demo.security.CustomUserDetails;
 import com.example.demo.security.TokenProvider;
 
 import jakarta.servlet.http.Cookie;
@@ -31,7 +31,6 @@ public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
 	private final TokenProvider tokenProvider;
-	private final CustomUserDetailsService customUserDetailService;
 	
 	//로그인
 	@PostMapping("/login")
@@ -42,10 +41,13 @@ public class AuthController {
 						loginRequestDTO.getPassword())
 				);
 		
-		User user = (User)authentication.getPrincipal();
+		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
 		
-		String accessToken = tokenProvider.createToken(user.getId(), user.getRole());
-		String refreshToken = tokenProvider.createRefreshToken(user.getId());
+		Long userId = customUserDetails.getUserId();
+		Role role = customUserDetails.getRole();
+
+		String accessToken = tokenProvider.createToken(userId, role);
+		String refreshToken = tokenProvider.createRefreshToken(userId);
 		
 		Cookie cookie = new Cookie("refreshToken",refreshToken);
 		cookie.setHttpOnly(true);
@@ -58,10 +60,10 @@ public class AuthController {
 		
 		LoginResponseDTO loginResponseDTO = new LoginResponseDTO(
 				accessToken,
-				user.getId(),
-				user.getEmail(),
-				user.getNickname(),
-				user.getRole());
+				userId,
+				customUserDetails.getUsername(),
+				customUserDetails.getNickname(),
+				role);
 		
 		return ResponseEntity.ok(loginResponseDTO);
 	}
@@ -80,7 +82,7 @@ public class AuthController {
 	}
 	
 	//refreshToken
-	@PostMapping("/auth/refresh")
+	@PostMapping("/refresh")
 	public ResponseEntity<?> refresh(HttpServletRequest request){
 		String refreshToken = null;
 		

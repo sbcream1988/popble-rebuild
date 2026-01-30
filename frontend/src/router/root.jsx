@@ -4,11 +4,13 @@ import userRouter from "./userRouter";
 import freeBoardRouter from "./freeBoardRouter";
 import popupRouter from "./popupRouter";
 import PopupPage from "../pages/popup/PopupPage";
+import authRouter from "./authRouter";
 
 const Home = lazy(() => import("../pages/MainPage"));
 const User = lazy(() => import("../pages/user/UserPage"));
 const FreeBoard = lazy(() => import("../pages/board/FreeBoardPage"));
 const Board = lazy(() => import("../pages/board/BoardPage"));
+const Auth = lazy(() => import("../pages/auth/AuthPage"));
 
 const root = createBrowserRouter([
   {
@@ -18,6 +20,15 @@ const root = createBrowserRouter([
         <Home></Home>
       </Suspense>
     ),
+  },
+  {
+    path: "auth",
+    element: (
+      <Suspense fallback={"..."}>
+        <Auth></Auth>
+      </Suspense>
+    ),
+    children: authRouter,
   },
   {
     path: "user",

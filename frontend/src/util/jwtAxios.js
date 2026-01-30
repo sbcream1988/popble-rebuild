@@ -1,9 +1,6 @@
 import axios from "axios";
-import {
-  getAccessToken,
-  clearAccessToken,
-  setAccessToken,
-} from "../util/tokenStore";
+import { clearAccessToken, setAccessToken } from "../util/tokenStore";
+import { store } from "../store";
 
 const jwtAxios = axios.create({
   baseURL: "http://localhost:8080",
@@ -12,7 +9,8 @@ const jwtAxios = axios.create({
 });
 
 jwtAxios.interceptors.request.use((config) => {
-  const token = getAccessToken();
+  const state = store.getState();
+  const token = state.auth.accessToken;
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

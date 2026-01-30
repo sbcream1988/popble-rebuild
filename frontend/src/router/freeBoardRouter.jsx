@@ -1,11 +1,12 @@
 import { Suspense, lazy } from "react";
+import PrivateRoute from "./privateRoute";
 
-const Create = lazy(() =>
-  import("../components/board/FreeBoardCreateComponent")
+const Create = lazy(
+  () => import("../components/board/FreeBoardCreateComponent"),
 );
 const List = lazy(() => import("../components/board/FreeBoardListComponent"));
-const Detail = lazy(() =>
-  import("../components/board/FreeBoardDetailComponent")
+const Detail = lazy(
+  () => import("../components/board/FreeBoardDetailComponent"),
 );
 const Edit = lazy(() => import("../components/board/FreeBoardEditComponent"));
 
@@ -14,9 +15,11 @@ const freeBoardRouter = [
   {
     path: "create",
     element: (
-      <Suspense fallback={"..."}>
-        <Create></Create>
-      </Suspense>
+      <PrivateRoute>
+        <Suspense fallback={"..."}>
+          <Create></Create>
+        </Suspense>
+      </PrivateRoute>
     ),
   },
   //게시판 목록
@@ -41,9 +44,11 @@ const freeBoardRouter = [
   {
     path: ":id/edit",
     element: (
-      <Suspense fallback={"..."}>
-        <Edit></Edit>
-      </Suspense>
+      <PrivateRoute>
+        <Suspense fallback={"..."}>
+          <Edit></Edit>
+        </Suspense>
+      </PrivateRoute>
     ),
   },
 ];
