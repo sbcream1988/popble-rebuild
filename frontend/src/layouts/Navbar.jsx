@@ -1,8 +1,33 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router";
 
 function Navbar() {
+  // 햄버거 메뉴 선택
   const [open, setOpen] = useState(false);
+  // 하위 메뉴 오픈
+  const [openMenu, setOpenMenu] = useState(null);
+
+  const menuRef = useRef(null);
+  const location = useLocation();
+
+  //외부 클릭시 닫기
+  useEffect(() => {
+    const handleClickOutside = (element) => {
+      if (menuRef.current && !menuRef.current.contains(element.target)) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  //페이지 이동 시 닫기
+  useEffect(() => {
+    setOpenMenu(null);
+    setOpen(false);
+  }, [location]);
 
   return (
     <div className="w-full h-20 bg-blue-200 flex justify-between items-center px-6">
@@ -10,31 +35,75 @@ function Navbar() {
         <div className="text-4xl">로고</div>
       </Link>
       {/* 데스크탑 화면 크기 클 때 */}
-      <nav className="hidden md:flex gap-6 text-3xl items-center">
+      <nav ref={menuRef} className="hidden md:flex gap-6 text-3xl items-center">
+        {/* 홈 */}
         <Link
           to="/"
-          className="text-blue-950 font-bold px-2 py-1 hover:border-b-4 border-blue-900 transition-all"
+          className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
         >
           Home
         </Link>
-        <Link
-          to="/popup"
-          className="text-blue-950 font-bold px-2 py-1 hover:border-b-4 border-blue-900 transition-all"
-        >
-          팝업스토어
-        </Link>
-        <Link
-          to="/board"
-          className="text-blue-950 font-bold px-2 py-1 hover:border-b-4 border-blue-900 transition-all"
-        >
-          게시판
-        </Link>
-        <Link
-          to="/mypage"
-          className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
-        >
-          마이페이지
-        </Link>
+        {/* 팝업 */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenMenu(openMenu === "popup" ? null : "popup")}
+            className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            팝업스토어
+          </button>
+          {openMenu === "popup" && (
+            <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40">
+              <Link to="/popup/list" className="p-2 hover:bg-blue-100">
+                팝업 목록
+              </Link>
+              <Link to="/popup/create" className="p-2 hover:bg-blue-100">
+                팝업 등록
+              </Link>
+            </div>
+          )}
+        </div>
+        {/* 게시판 */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenMenu(openMenu === "board" ? null : "board")}
+            className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            게시판
+          </button>
+          {openMenu === "board" && (
+            <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40">
+              <Link to="/board/notice" className="p-2 hover:bg-blue-100">
+                공지게시판
+              </Link>
+              <Link to="/board/free" className="p-2 hover:bg-blue-100">
+                자유게시판
+              </Link>
+              <Link to="/board/qna" className="p-2 hover:bg-blue-100">
+                QNA게시판
+              </Link>
+              <Link to="/board/promo" className="p-2 hover:bg-blue-100">
+                홍보게시판
+              </Link>
+            </div>
+          )}
+        </div>
+        {/* 마이페이지 */}
+        <div className="relative">
+          <button
+            onClick={() => setOpenMenu(openMenu === "mypage" ? null : "mypage")}
+            className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
+          >
+            마이페이지
+          </button>
+          {openMenu === "mypage" && (
+            <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40">
+              <Link to="/" className="p-2 hover:bg-blue-100">
+                내 정보
+              </Link>
+              <Link></Link>
+            </div>
+          )}
+        </div>
         <Link
           to="/auth/login"
           className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
