@@ -2,6 +2,10 @@ package com.example.demo.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +13,8 @@ import com.example.demo.domain.FreeBoard;
 import com.example.demo.domain.User;
 import com.example.demo.dto.FreeBoardRequestDTO;
 import com.example.demo.dto.FreeBoardResponseDTO;
+import com.example.demo.dto.PageRequestDTO;
+import com.example.demo.dto.PageResponseDTO;
 import com.example.demo.mapper.FreeBoardMapper;
 import com.example.demo.repository.FreeBoardRepository;
 import com.example.demo.repository.UserRepository;
@@ -25,11 +31,18 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 	
 	// 전체 목록 가져오기
 	@Transactional(readOnly = true)
-	public List<FreeBoardResponseDTO> getList(){
+	public PageResponseDTO<FreeBoardResponseDTO> getList(PageRequestDTO pageRequestDTO){
 		
-		return freeBoardRepository.findAll().stream()
-				.map(board->FreeBoardMapper.fromEntity(board))
-				.toList();
+		Pageable pageable = PageRequest.of(pageRequestDTO.getPage() -1 , pageRequestDTO.getSize(), Sort.by("id").descending());
+		
+		Page<FreeBoard> result = freeBoardRepository.findAll(pageable);
+		
+		List<FreeBoardResponseDTO> dtoList = result.getContent().stream()
+				.map(FreeBoardMapper::fromEntity).toList();
+		
+		return new PageResponseDTO<FreeBoardResponseDTO>(dtoList,pageRequestDTO, result.getTotalElements());
+		
+		
 	}
 	
 	// 글 작성

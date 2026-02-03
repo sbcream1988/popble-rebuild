@@ -14,7 +14,7 @@ export const login = async (email, password) => {
   );
   const { accessToken, userId, email: userEmail, nickname, role } = result.data;
   setAccessToken(accessToken);
-  return { userId, email: userEmail, nickname, role };
+  return { accessToken, userId, email: userEmail, nickname, role };
 };
 
 //로그아웃

@@ -41,9 +41,11 @@ export const deleteBoard = async (id) => {
 // ----- 인증 필요 없는 API -----(조회는 비회원도 가능)
 
 // 목록 조회
-export const getList = async () => {
+export const getList = async (page, size) => {
   try {
-    const response = await axios.get(`${host}/list`);
+    const response = await axios.get(`${host}/list`, {
+      params: { page, size },
+    });
     return response.data;
   } catch (e) {
     console.error("게시판 목록을 불러오는 중 오류가 발생했습니다", e);

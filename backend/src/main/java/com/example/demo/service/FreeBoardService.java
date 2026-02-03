@@ -5,10 +5,12 @@ import java.util.List;
 import com.example.demo.domain.FreeBoard;
 import com.example.demo.dto.FreeBoardRequestDTO;
 import com.example.demo.dto.FreeBoardResponseDTO;
+import com.example.demo.dto.PageRequestDTO;
+import com.example.demo.dto.PageResponseDTO;
 
 public interface FreeBoardService {
 	//리스트 불러오기
-	List<FreeBoardResponseDTO> getList(); 
+	PageResponseDTO<FreeBoardResponseDTO> getList(PageRequestDTO pageRequestDTO); 
 	
 	//작성
 	FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO,Long userId);

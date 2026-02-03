@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.FreeBoardRequestDTO;
 import com.example.demo.dto.FreeBoardResponseDTO;
+import com.example.demo.dto.PageRequestDTO;
+import com.example.demo.dto.PageResponseDTO;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.FreeBoardService;
 
@@ -29,8 +31,8 @@ public class FreeBoardController {
 	
 	// 목록 가져오기
 	@GetMapping("/list")
-	public ResponseEntity<List<FreeBoardResponseDTO>> list(){
-		return ResponseEntity.ok(freeBoardService.getList());
+	public ResponseEntity<PageResponseDTO<FreeBoardResponseDTO>> list(PageRequestDTO pageRequestDTO){
+		return ResponseEntity.ok(freeBoardService.getList(pageRequestDTO));
 	}
 	
 	// 글 가져오기

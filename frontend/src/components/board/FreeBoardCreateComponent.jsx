@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { createBoard } from "../../api/freeBoardApi";
+import { store } from "../../store";
 
 const FreeBoardCreateComponent = () => {
   const [title, setTitle] = useState("");
@@ -9,6 +10,8 @@ const FreeBoardCreateComponent = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("submit accessToken:", store.getState().auth.accessToken);
     const boardDTO = {
       title,
       content,

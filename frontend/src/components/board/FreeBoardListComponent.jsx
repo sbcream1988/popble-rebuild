@@ -1,21 +1,26 @@
 import { useEffect, useState } from "react";
 import { getList } from "../../api/freeBoardApi";
 import { Link, useNavigate } from "react-router";
+import useCustomMove from "../../hooks/useCustomMove";
+import PageComponent from "../common/PageComponent";
 
 const FreeBoardListComponent = () => {
-  const [list, setList] = useState([]);
-
+  const [serverData, setServerData] = useState(null);
   const navigate = useNavigate();
+  const { page, size, movePage } = useCustomMove();
 
   useEffect(() => {
-    getList()
+    getList(page, size)
       .then((data) => {
-        setList(data);
+        setServerData(data);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, []);
+  }, [page, size]);
+
+  if (!serverData) return <div>로딩중...</div>;
+
   return (
     <div>
       <div className="w-full content-center">
@@ -31,7 +36,7 @@ const FreeBoardListComponent = () => {
             </tr>
           </thead>
           <tbody className="border-b border-sky-700 text-sm">
-            {list.map((board) => (
+            {serverData.dtoList.map((board) => (
               <tr
                 key={board.id}
                 onClick={() => navigate(`${board.id}`)}
@@ -52,6 +57,13 @@ const FreeBoardListComponent = () => {
           </tbody>
         </table>
       </div>
+
+      {/* 페이지 버튼 */}
+      <PageComponent
+        serverData={serverData}
+        movePage={movePage}
+      ></PageComponent>
+
       {/* 버튼 부분 */}
       <div className="flex justify-end mt-4">
         <Link to={"create"}>

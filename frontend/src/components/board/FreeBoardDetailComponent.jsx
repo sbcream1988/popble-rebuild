@@ -1,10 +1,28 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
-import { getBoard } from "../../api/freeBoardApi";
+import { Link, useNavigate, useParams } from "react-router";
+import { deleteBoard, getBoard } from "../../api/freeBoardApi";
 
 const FreeBoardDetailComponent = () => {
   const { id } = useParams();
   const [board, setBoard] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    const ok = window.confirm("삭제하시겠습니까?");
+    if (!ok) {
+      return;
+    }
+
+    try {
+      await deleteBoard(id);
+      alert("삭제완료");
+      navigate("..");
+    } catch (error) {
+      console.error(error);
+      alert("삭제실패");
+    }
+  };
 
   useEffect(() => {
     getBoard(id)
@@ -54,8 +72,11 @@ const FreeBoardDetailComponent = () => {
               수정
             </button>
           </Link>
-          <Link to={"delete"}>
-            <button className="p-2 m-2 rounded-2xl bg-sky-300 w-20 h-10 hover:bg-sky-400">
+          <Link to={`/${id}`}>
+            <button
+              className="p-2 m-2 rounded-2xl bg-sky-300 w-20 h-10 hover:bg-sky-400"
+              onClick={handleDelete}
+            >
               삭제
             </button>
           </Link>
