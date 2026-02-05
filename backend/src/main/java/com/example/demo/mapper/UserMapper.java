@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.domain.User;
+import com.example.demo.dto.MyPageRequestDTO;
+import com.example.demo.dto.MyPageResponseDTO;
 import com.example.demo.dto.UserDTO;
 
 public class UserMapper {
@@ -45,5 +47,16 @@ public class UserMapper {
 					.providerId(user.getProviderId())
 					.createAt(user.getCreateAt())
 					.build();
+	}
+	
+	// ---------------myPage 용--------------	
+	public static MyPageResponseDTO toMyPageDTO(User user) {
+		return MyPageResponseDTO.builder()
+				.email(user.getEmail())
+				.nickname(user.getNickname())
+				.profileImage(user.getProfileImage())
+				.phoneNumber(user.getPhoneNumber())
+				.address(user.getAddress())
+				.build();
 	}
 }

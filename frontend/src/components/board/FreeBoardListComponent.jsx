@@ -45,7 +45,7 @@ const FreeBoardListComponent = () => {
                 <td className="p-2 border-b border-gray-200">{board.id}</td>
                 <td className="p-2 border-b border-gray-200">{board.title}</td>
                 <td className="p-2 border-b border-gray-200">
-                  {board.writer?.email ?? "익명"}
+                  {board.nickname ?? "익명"}
                 </td>
                 <td className="p-2 border-b border-gray-200">
                   {board?.createdAt?.substring(0, 10)}

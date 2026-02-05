@@ -43,9 +43,7 @@ const FreeBoardDetailComponent = () => {
       {/* 작성자, 일자 */}
       <div className="border-b border-sky-700">
         <div className="flex justify-between">
-          <div className="p-2 font-bold text-sm">
-            작성자: {board.writer?.email ?? "익명"}
-          </div>
+          <div className="p-2 font-bold text-sm">작성자: {board.nickname}</div>
           <div className="flex justify-end">
             <div className="p-2 font-bold text-sm">조회수: </div>
             <div className="p-2 font-bold text-sm">추천수: </div>

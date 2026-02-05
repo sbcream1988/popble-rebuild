@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
+import com.example.demo.dto.MyPageRequestDTO;
+import com.example.demo.dto.MyPageResponseDTO;
+import com.example.demo.dto.PasswordChangeDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.repository.UserRepository;
@@ -74,7 +77,7 @@ public class UserServiceImpl implements UserService {
 		return UserMapper.toDTO(updatedUser);
 	}
 	
-	// 회원 삭제
+	// 회원 삭제(Ban!!)
 	@Transactional
 	@Override
 	public void deleteUser(Long id) {
@@ -108,6 +111,56 @@ public class UserServiceImpl implements UserService {
 		String randomNick = UUID.randomUUID().toString().substring(0,6);
 		return "user_" + randomNick;
 	}
+	
+	// -------- MyPage용 기능 ---------
+	
+	//내 정보 조회
+	@Transactional(readOnly = true)
+	public MyPageResponseDTO getMyInfo(Long id) {
+		User user = userRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
+		
+		return UserMapper.toMyPageDTO(user);
+	}
+	
+	// 내 정보 수정
+	@Override
+	@Transactional
+	public MyPageResponseDTO updateMyInfo(MyPageRequestDTO requestDTO, Long userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
+		
+		user.setNickname(requestDTO.getNickname());
+		user.setPhoneNumber(requestDTO.getPhoneNumber());
+		user.setAddress(requestDTO.getAddress());
+		user.setProfileImage(requestDTO.getProfileImage());
+		
+		return UserMapper.toMyPageDTO(user);
+	}
+
+	@Override
+	public UserDTO changePassword(PasswordChangeDTO changeDTO, Long userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
+		
+		if(user.getPassword() != changeDTO.getCurrentPassword() && user.getPassword() != null) {
+			user.setPassword(passwordEncoder.encode(changeDTO.getNewPassword()));
+		}
+		
+		
+		return UserMapper.toDTO(user);
+	}
+
+	// 회원 탈퇴
+	@Override
+	public void withdrawMember(Long userId) {
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
+		
+		userRepository.delete(user);
+		
+	}
+	
 	
 
 }

@@ -35,7 +35,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 		
 		Pageable pageable = PageRequest.of(pageRequestDTO.getPage() -1 , pageRequestDTO.getSize(), Sort.by("id").descending());
 		
-		Page<FreeBoard> result = freeBoardRepository.findAll(pageable);
+		Page<FreeBoard> result = freeBoardRepository.findAllWithWriter(pageable);
 		
 		List<FreeBoardResponseDTO> dtoList = result.getContent().stream()
 				.map(FreeBoardMapper::fromEntity).toList();
