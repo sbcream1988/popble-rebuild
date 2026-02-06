@@ -87,7 +87,7 @@ public class User implements UserDetails {
 	
 	// 가입일
 	@Column(updatable = false) //가입일은 수정 불가능하게
-	private LocalDate createAt = LocalDate.now();
+	private LocalDate createdAt = LocalDate.now();
 	
 	//
 	

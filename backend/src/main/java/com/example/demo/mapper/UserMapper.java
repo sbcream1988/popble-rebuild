@@ -26,7 +26,7 @@ public class UserMapper {
 				.address(userDTO.getAddress())
 				.provider(userDTO.getProvider())
 				.providerId(userDTO.getProviderId())
-				.createAt(LocalDate.now())
+				.createdAt(LocalDate.now())
 				.build();
 	}
 	
@@ -45,7 +45,7 @@ public class UserMapper {
 					.address(user.getAddress())
 					.provider(user.getProvider())
 					.providerId(user.getProviderId())
-					.createAt(user.getCreateAt())
+					.createAt(user.getCreatedAt())
 					.build();
 	}
 	
@@ -57,6 +57,9 @@ public class UserMapper {
 				.profileImage(user.getProfileImage())
 				.phoneNumber(user.getPhoneNumber())
 				.address(user.getAddress())
+				.birthday(user.getBirthday())
+				.createdAt(user.getCreatedAt())
+				.gender(user.getGender())
 				.build();
 	}
 }

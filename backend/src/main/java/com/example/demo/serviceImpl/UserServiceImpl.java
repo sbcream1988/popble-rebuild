@@ -130,6 +130,11 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
 		
+		//닉네임 변경시 중복 체크
+		if(requestDTO.getNickname() != null && !requestDTO.getNickname().equals(user.getNickname()) && userRepository.existsByNickname(requestDTO.getNickname())) {
+			throw new IllegalArgumentException("이미 사용 중인 닉네임입니다");
+		}
+		
 		user.setNickname(requestDTO.getNickname());
 		user.setPhoneNumber(requestDTO.getPhoneNumber());
 		user.setAddress(requestDTO.getAddress());
@@ -139,14 +144,25 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public UserDTO changePassword(PasswordChangeDTO changeDTO, Long userId) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("해당 유저의 아이디가 존재하지 않습니다"));
 		
-		if(user.getPassword() != changeDTO.getCurrentPassword() && user.getPassword() != null) {
-			user.setPassword(passwordEncoder.encode(changeDTO.getNewPassword()));
+		if(!passwordEncoder.matches(changeDTO.getCurrentPassword(), user.getPassword())) {
+			throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다");
+			
 		}
 		
+		//비밀번호 검증
+		if(changeDTO.getNewPassword().length()<8) {
+			throw new IllegalArgumentException("비밀번호는 최소 8자 이상이어야합니다");
+		}
+		if(passwordEncoder.matches(changeDTO.getNewPassword(), user.getPassword())) {
+			throw new IllegalArgumentException("기존 비밀번호와 동일합니다");
+		}
+		
+		user.setPassword(passwordEncoder.encode(changeDTO.getNewPassword()));
 		
 		return UserMapper.toDTO(user);
 	}

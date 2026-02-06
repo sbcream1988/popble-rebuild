@@ -1,5 +1,9 @@
 package com.example.demo.dto;
 
+import java.time.LocalDate;
+
+import com.example.demo.domain.Gender;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,4 +25,9 @@ public class MyPageResponseDTO {
 	
 	private String profileImage;
 	
+	private LocalDate birthday;
+	
+	private LocalDate createdAt;
+	
+	private Gender gender;
 }

@@ -5,12 +5,14 @@ import freeBoardRouter from "./freeBoardRouter";
 import popupRouter from "./popupRouter";
 import PopupPage from "../pages/popup/PopupPage";
 import authRouter from "./authRouter";
+import myPageRouter from "./myPageRouter";
 
 const Home = lazy(() => import("../pages/MainPage"));
 const User = lazy(() => import("../pages/user/UserPage"));
 const FreeBoard = lazy(() => import("../pages/board/FreeBoardPage"));
 const Board = lazy(() => import("../pages/board/BoardPage"));
 const Auth = lazy(() => import("../pages/auth/AuthPage"));
+const MyPage = lazy(() => import("../pages/myPage/MyPage"));
 
 const root = createBrowserRouter([
   {
@@ -80,6 +82,16 @@ const root = createBrowserRouter([
       </Suspense>
     ),
     children: popupRouter,
+  },
+  //마이페이지
+  {
+    path: "myPage",
+    element: (
+      <Suspense fallback={"...로오오오딩중"}>
+        <MyPage></MyPage>
+      </Suspense>
+    ),
+    children: myPageRouter,
   },
 ]);
 

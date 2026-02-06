@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,26 +38,30 @@ public class UserController {
 	}
 	
 	// 회원 정보 수정
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@PatchMapping("/{id}")
-	public ResponseEntity<UserDTO> update(@PathVariable(name = "userId") Long id, UserDTO userDTO) {
+	public ResponseEntity<UserDTO> update(@PathVariable(name = "id") Long id, @RequestBody UserDTO userDTO) {
 		return ResponseEntity.ok(userService.updateUser(id, userDTO));
 	}
 	
 	// 회원 삭제
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable(name = "userId") Long id) {
+	public ResponseEntity<String> delete(@PathVariable(name = "id") Long id) {
 		userService.deleteUser(id);
 		return ResponseEntity.ok("회원 삭제가 완료되었습니다");
 	}
 	
 	// 회원 조회
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUser(@PathVariable(name = "userId") Long id){
+	public ResponseEntity<UserDTO> getUser(@PathVariable(name = "id") Long id){
 		return ResponseEntity.ok(userService.getUser(id));
 	}
 	
 	// 회원 리스트 조회
 	@GetMapping("/list")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<UserDTO>> getAllUsers(){
 		return ResponseEntity.ok(userService.getAllUsers());
 	}
@@ -84,7 +89,7 @@ public class UserController {
 	//회원 탈퇴
 	@DeleteMapping("/me")
 	public ResponseEntity<String> withdrawMember(@AuthenticationPrincipal CustomUserDetails userDetails){
-		userService.deleteUser(userDetails.getUserId());
+		userService.withdrawMember(userDetails.getUserId());
 		return ResponseEntity.ok("회원 탈퇴 성공!");
 	}
 }

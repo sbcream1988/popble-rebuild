@@ -90,14 +90,14 @@ function Navbar() {
         {/* 마이페이지 */}
         <div className="relative">
           <button
-            onClick={() => setOpenMenu(openMenu === "mypage" ? null : "mypage")}
+            onClick={() => setOpenMenu(openMenu === "myPage" ? null : "myPage")}
             className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
           >
             마이페이지
           </button>
-          {openMenu === "mypage" && (
+          {openMenu === "myPage" && (
             <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40">
-              <Link to="/" className="p-2 hover:bg-blue-100">
+              <Link to="/myPage/info" className="p-2 hover:bg-blue-100">
                 내 정보
               </Link>
               <Link></Link>
@@ -140,7 +140,7 @@ function Navbar() {
             게시판
           </Link>
           <Link
-            to="/mypage"
+            to="/my"
             className="p-2 hover:font-bold"
             onClick={() => setOpen(false)}
           >
