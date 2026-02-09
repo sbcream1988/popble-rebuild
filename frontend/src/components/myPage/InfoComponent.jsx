@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { withdrawMember, getMyInfo } from "../../api/myPageApi";
 
-const Info = () => {
+const InfoComponent = () => {
   const [myInfo, setMyInfo] = useState(null);
 
   const navigate = useNavigate();
@@ -101,12 +101,12 @@ const Info = () => {
         {/* 수정하기 */}
         <button
           className="m-2 p-2 bg-blue-200 rounded-xl hover:bg-blue-300 font-semibold"
-          onclick={() => navigate("/mypage/edit")}
+          onClick={() => navigate("/mypage/update")}
         >
           회원 정보 수정
         </button>
         {/* 비밀번호 변경 */}
-        <button className="m-2 p-2 bg-blue-200 rounded-xl hover:bg-blue-300 font-semibold">
+        <button className="m-2 p-2 bg-blue-200 rounded-xl font-semibold hover:bg-blue-300  cursor-pointer">
           비밀번호 변경
         </button>
         {/* 회원탈퇴 */}
@@ -121,4 +121,4 @@ const Info = () => {
   );
 };
 
-export default Info;
+export default InfoComponent;
