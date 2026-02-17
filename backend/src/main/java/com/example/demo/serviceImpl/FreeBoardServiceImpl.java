@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.domain.FreeBoard;
 import com.example.demo.domain.User;
@@ -19,6 +20,7 @@ import com.example.demo.mapper.FreeBoardMapper;
 import com.example.demo.repository.FreeBoardRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.FreeBoardService;
+import com.example.demo.service.ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +30,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 
 	private final FreeBoardRepository freeBoardRepository;
 	private final UserRepository userRepository;
+	private final ImageService imageService;
 	
 	// 전체 목록 가져오기
 	@Transactional(readOnly = true)
@@ -47,7 +50,7 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 	
 	// 글 작성
 	@Transactional
-	public FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO, Long userId) {
+	public FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO, Long userId, List<MultipartFile> files) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 				
@@ -56,6 +59,13 @@ public class FreeBoardServiceImpl implements FreeBoardService{
 		board.setWriter(user);
 		
 		freeBoardRepository.save(board);
+		
+		// 이미지 업로드
+		if(files != null) {
+			for(MultipartFile file : files) {
+				imageService.uploadImage(file, "FREEBOARD", board.getId(), false);
+			}
+		}
 		
 		return FreeBoardMapper.fromEntity(board);
 	}

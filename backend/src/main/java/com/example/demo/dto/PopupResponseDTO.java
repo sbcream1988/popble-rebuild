@@ -2,15 +2,10 @@ package com.example.demo.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;import com.example.demo.domain.PopupReservationSlot;
+import java.util.List;
 
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 //팝업 상세조회 응답 DTO
 @Getter
@@ -47,5 +42,7 @@ public class PopupResponseDTO {
 	//예약 가능시간
 	private List<PopupReservationSlotResponseDTO> slots;
 	
+	//이미지
+	private List<ImageResponseDTO> images;
 
 }

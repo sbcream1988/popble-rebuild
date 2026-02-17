@@ -13,6 +13,8 @@ const PopupCreateComponent = () => {
     maxCapacity: 0,
   });
 
+  const [images, setImages] = useState([]);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,6 +25,10 @@ const PopupCreateComponent = () => {
     }));
   };
 
+  const handleImage = (e) => {
+    setImages(Array.from(e.target.files));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const requestDTO = {
@@ -30,8 +36,9 @@ const PopupCreateComponent = () => {
       price: Number(form.price),
       maxCapacity: Number(form.maxCapacity),
     };
+
     try {
-      await createPopup(requestDTO);
+      await createPopup(requestDTO, images);
       alert("팝업스토어 등록이 완료되었습니다");
       navigate("/popup/list");
     } catch (error) {
@@ -122,6 +129,15 @@ const PopupCreateComponent = () => {
             ></input>
             <span>명</span>
           </div>
+        </div>
+        <div>
+          <label>팝업이미지</label>
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleImage}
+          ></input>
         </div>
         <hr className="p-2"></hr>
         {/* 등록 버튼 */}

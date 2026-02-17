@@ -1,9 +1,10 @@
 import axios from "axios";
 import { clearAccessToken, setAccessToken } from "../util/tokenStore";
 import { store } from "../store";
+import { API_SERVER_HOST } from "../api/apiConfig";
 
 const jwtAxios = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: API_SERVER_HOST,
   //쿠키 자동 포함
   withCredentials: true,
 });
@@ -24,16 +25,12 @@ jwtAxios.interceptors.response.use(
   async (error) => {
     if (error.response?.status === 401) {
       try {
-        const result = await axios.post(
-          "/api/auth/refresh",
-          {},
-          { baseURL: "http://localhost:8080", withCredentials: true },
-        );
+        const result = await jwtAxios.post("/api/auth/refresh");
 
         setAccessToken(result.data.accessToken);
 
         error.config.headers.Authorization = `Bearer ${result.data.accessToken}`;
-        return axios(error.config);
+        return jwtAxios(error.config);
       } catch {
         clearAccessToken();
         //로그인 페이지로

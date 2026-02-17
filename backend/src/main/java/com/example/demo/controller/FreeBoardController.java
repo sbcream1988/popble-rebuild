@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.FreeBoardRequestDTO;
 import com.example.demo.dto.FreeBoardResponseDTO;
@@ -43,8 +45,8 @@ public class FreeBoardController {
 	
 	// 글 등록
 	@PostMapping
-	public ResponseEntity<FreeBoardResponseDTO> create(@RequestBody FreeBoardRequestDTO requestDTO, @AuthenticationPrincipal CustomUserDetails userDetails){
-		return ResponseEntity.ok(freeBoardService.create(requestDTO, userDetails.getUserId()));
+	public ResponseEntity<FreeBoardResponseDTO> create(@RequestPart("data") FreeBoardRequestDTO requestDTO,@RequestPart(value = "images",required = false) List<MultipartFile> images, @AuthenticationPrincipal CustomUserDetails userDetails){
+		return ResponseEntity.ok(freeBoardService.create(requestDTO, userDetails.getUserId(), images));
 	}
 	
 	// 글 수정

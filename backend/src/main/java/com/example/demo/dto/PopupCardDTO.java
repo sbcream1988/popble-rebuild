@@ -27,4 +27,7 @@ public class PopupCardDTO {
 	
 	//조회수
 	private int viewCount;
+	
+	//썸네일
+	private String thumbnailUrl;
 }

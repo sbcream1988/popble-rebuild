@@ -1,13 +1,15 @@
 package com.example.demo.mapper;
 
+import java.util.List;
+
 import com.example.demo.domain.Popup;
+import com.example.demo.dto.ImageResponseDTO;
 import com.example.demo.dto.PopupCreateRequestDTO;
 import com.example.demo.dto.PopupResponseDTO;
-import com.example.demo.dto.PopupUpdateRequestDTO;
 
 public class PopupMapper {
 
-	public static PopupResponseDTO fromEntity(Popup popup) {
+	public static PopupResponseDTO fromEntity(Popup popup, List<ImageResponseDTO> images) {
 		return PopupResponseDTO.builder()
 				.id(popup.getId())
 				.title(popup.getTitle())
@@ -18,6 +20,7 @@ public class PopupMapper {
 				.maxCapacity(popup.getMaxCapacity())
 				.price(popup.getPrice())
 				.createdAt(popup.getCreatedAt())
+				.images(images)
 				.build();
 	}
 	

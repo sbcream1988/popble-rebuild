@@ -5,17 +5,23 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.domain.Image;
 import com.example.demo.domain.Popup;
 import com.example.demo.domain.Role;
 import com.example.demo.domain.User;
+import com.example.demo.dto.ImageResponseDTO;
 import com.example.demo.dto.PopupCardDTO;
 import com.example.demo.dto.PopupCreateRequestDTO;
 import com.example.demo.dto.PopupResponseDTO;
 import com.example.demo.dto.PopupUpdateRequestDTO;
+import com.example.demo.mapper.ImageMapper;
 import com.example.demo.mapper.PopupMapper;
+import com.example.demo.repository.ImageRepository;
 import com.example.demo.repository.PopupRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.ImageService;
 import com.example.demo.service.PopupService;
 
 
@@ -27,11 +33,13 @@ public class PopupServiceImpl implements PopupService {
 
 	private final PopupRepository popupRepository;
 	private final UserRepository userRepository;
+	private final ImageService imageService;
+	private final ImageRepository imageRepository;
 	
 	//팝업 등록
 	@Override
 	@Transactional
-	public PopupResponseDTO createPopup(PopupCreateRequestDTO popupCreateRequestDTO, Long userId) {
+	public PopupResponseDTO createPopup(PopupCreateRequestDTO popupCreateRequestDTO, Long userId, List<MultipartFile> files) {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 		
@@ -39,14 +47,24 @@ public class PopupServiceImpl implements PopupService {
 		if(user.getRole() != Role.ROLE_COMPANY && user.getRole() != Role.ROLE_ADMIN) {
 			throw new RuntimeException("팝업 등록 권한 없음");
 		}
-		
+	
 		Popup popup = PopupMapper.toEntity(popupCreateRequestDTO);
 		
 		popup.setOwner(user);
 		
 		popupRepository.save(popup);
 		
-		return PopupMapper.fromEntity(popup);
+		//이미지 등록
+		if(files != null && !files.isEmpty()) {
+			for(int i=0; i < files.size(); i++) {
+				boolean isThumbnail = (i == 0);
+				imageService.uploadImage(files.get(i), "POPUP", popup.getId(), isThumbnail);
+			}
+			
+			return getPopup(popup.getId());
+		}
+				
+		return getPopup(popup.getId());
 	}
 
 	//팝업 수정
@@ -85,7 +103,7 @@ public class PopupServiceImpl implements PopupService {
 			popup.setMaxCapacity(requestDTO.getMaxCapacity());
 		}
 		
-		return PopupMapper.fromEntity(popup);
+		return getPopup(popupId);
 		
 	}
 
@@ -115,7 +133,16 @@ public class PopupServiceImpl implements PopupService {
 		Popup popup = popupRepository.findById(popupId)
 				.orElseThrow(()->new IllegalArgumentException("해당 팝업이 존재하지 않습니다"));
 		
-		return PopupMapper.fromEntity(popup);
+		List<ImageResponseDTO> images = imageRepository
+				.findByTargetTypeAndTargetId("POPUP", popupId)
+				.stream()
+				.map(ImageMapper::fromEntity)
+				.toList();
+		
+		
+		
+		
+		return PopupMapper.fromEntity(popup, images);
 	}
 
 	//팝업 리스트
@@ -124,7 +151,16 @@ public class PopupServiceImpl implements PopupService {
 	public List<PopupCardDTO> getPopupCards() {
 		
 		return popupRepository.findAll().stream()
-				.map(popup->PopupCardDTO.builder()
+				.map(popup->{
+						List<Image> images = imageRepository.findByTargetTypeAndTargetId("POPUP", popup.getId());
+						String thumbnailUrl = images.stream()
+								.filter(Image::isThumbnail)
+								.findFirst()
+								.map(Image::getAccessUrl)
+								.orElse(null);
+								
+					
+						return PopupCardDTO.builder()
 						.id(popup.getId())
 						.title(popup.getTitle())
 						.address(popup.getAddress())
@@ -132,7 +168,8 @@ public class PopupServiceImpl implements PopupService {
 						.endDate(popup.getEndDate())
 						.price(popup.getPrice())
 						.viewCount(popup.getViewCount())
-						.build())
+						.thumbnailUrl(thumbnailUrl)
+						.build();})
 				.toList();
 	}
 

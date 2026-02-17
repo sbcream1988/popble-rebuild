@@ -31,7 +31,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 		http.csrf(csrf->csrf.disable())
 		.cors(cors->cors.configurationSource(corsConfigurationSource()))
-		.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/board/free/list","/api/board/free/*", "/api/user/signup", "/api/popup", "/api/popup/*", "/api/popup/list").permitAll()
+		.authorizeHttpRequests(auth -> auth.requestMatchers("/images/**","/api/auth/**", "/api/board/free/list","/api/board/free/*", "/api/user/signup", "/api/popup", "/api/popup/*", "/api/popup/list" ).permitAll()
 									.requestMatchers("/api/board/**").hasAnyRole("USER","COMPANY","ADMIN")
 									.requestMatchers("/api/popup/**").hasAnyRole("COMPANY", "ADMIN")
 									.requestMatchers("/api/user/me/*").permitAll()

@@ -2,6 +2,8 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.demo.domain.FreeBoard;
 import com.example.demo.dto.FreeBoardRequestDTO;
 import com.example.demo.dto.FreeBoardResponseDTO;
@@ -13,7 +15,7 @@ public interface FreeBoardService {
 	PageResponseDTO<FreeBoardResponseDTO> getList(PageRequestDTO pageRequestDTO); 
 	
 	//작성
-	FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO,Long userId);
+	FreeBoardResponseDTO create(FreeBoardRequestDTO requestDTO,Long userId, List<MultipartFile> files);
 	
 	//게시글 가져오기
 	FreeBoardResponseDTO get(Long id);
