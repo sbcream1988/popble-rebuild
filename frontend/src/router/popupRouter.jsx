@@ -1,7 +1,6 @@
 import { lazy, Suspense } from "react";
-import PopupDetailComponent from "../components/popup/PopupDetailComponent";
 
-const Create = lazy(() => import("../components/popup/popupCreateComponent"));
+const Create = lazy(() => import("../components/popup/PopupCreateComponent"));
 const List = lazy(() => import("../components/popup/PopupListComponent"));
 const Detail = lazy(() => import("../components/popup/PopupDetailComponent"));
 const DetailPage = lazy(() => import("../pages/popup/PopupDetailPage"));
