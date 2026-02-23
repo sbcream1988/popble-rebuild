@@ -38,9 +38,9 @@ const PopupCreateComponent = () => {
     };
 
     try {
-      await createPopup(requestDTO, images);
+      const popup = await createPopup(requestDTO, images);
       alert("팝업스토어 등록이 완료되었습니다");
-      navigate("/popup/list");
+      navigate(`/api/popup/${popup.id}/slots`);
     } catch (error) {
       console.error(error);
       alert("팝업스토어 등록 중 오류가 발생했습니다");

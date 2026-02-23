@@ -1,6 +1,9 @@
 import { Link } from "react-router";
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { logout as logoutAction } from "../store/authSlice";
+import { logout as apiLogout } from "../api/AuthApi";
 
 function Navbar() {
   // 햄버거 메뉴 선택
@@ -8,8 +11,22 @@ function Navbar() {
   // 하위 메뉴 오픈
   const [openMenu, setOpenMenu] = useState(null);
 
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.auth.user);
+
   const menuRef = useRef(null);
   const location = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      await apiLogout();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(logoutAction());
+    }
+  };
 
   //외부 클릭시 닫기
   useEffect(() => {
@@ -56,9 +73,11 @@ function Navbar() {
               <Link to="/popup/list" className="p-2 hover:bg-blue-100">
                 팝업 목록
               </Link>
-              <Link to="/popup/create" className="p-2 hover:bg-blue-100">
-                팝업 등록
-              </Link>
+              {user?.role === "ROLE_ADMIN" || user?.role === "ROLE_COMPANY" ? (
+                <Link to="/popup/create" className="p-2 hover:bg-blue-100">
+                  팝업 등록
+                </Link>
+              ) : null}
             </div>
           )}
         </div>
@@ -100,16 +119,27 @@ function Navbar() {
               <Link to="/myPage/info" className="p-2 hover:bg-blue-100">
                 내 정보
               </Link>
-              <Link></Link>
+              <Link to="/myPage/reservation">내 예약</Link>
+              <Link to="/myPage/popups">내 팝업</Link>
             </div>
           )}
         </div>
-        <Link
-          to="/auth/login"
-          className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
-        >
-          로그인
-        </Link>
+        {/* 로그인 */}
+        {isLoggedIn ? (
+          <>
+            <span className="text-sm">{user?.nickname}님 환영합니다</span>
+            <button onClick={handleLogout} className="bg-white">
+              로그아웃
+            </button>
+          </>
+        ) : (
+          <Link
+            to="/auth/login"
+            className="text-blue-950 font-bold px-2 py-1  hover:border-b-4 border-blue-900 transition-all"
+          >
+            로그인
+          </Link>
+        )}
       </nav>
       {/* 햄버거 버튼 모바일 또는 크기 작을때 */}
       <button onClick={() => setOpen(!open)} className="md:hidden p-2">

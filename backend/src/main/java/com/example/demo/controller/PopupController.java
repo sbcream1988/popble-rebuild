@@ -22,7 +22,6 @@ import com.example.demo.dto.PopupResponseDTO;
 import com.example.demo.dto.PopupUpdateRequestDTO;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.PopupService;
-import com.example.demo.serviceImpl.PopupServiceImpl;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -69,5 +68,13 @@ public class PopupController {
 	@GetMapping("/list")
 	public ResponseEntity<List<PopupCardDTO>> getList() {
 		return ResponseEntity.ok(popupService.getPopupCards());
+	}
+	
+	// === COMPANY 영역 ===
+	// 내가 등록한 팝업 조회
+	@GetMapping("/my")
+	@PreAuthorize("hasRole('ROLE_COMPANY') or hasRole('ROLE_ADMIN')")
+	public ResponseEntity<List<PopupCardDTO>> getMyPopups(@AuthenticationPrincipal CustomUserDetails customUserDetails){
+		return ResponseEntity.ok(popupService.getMyPopups(customUserDetails.getUserId()));
 	}
 }

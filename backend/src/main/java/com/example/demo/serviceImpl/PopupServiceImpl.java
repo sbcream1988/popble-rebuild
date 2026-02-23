@@ -173,5 +173,33 @@ public class PopupServiceImpl implements PopupService {
 				.toList();
 	}
 
+	// === COMPANY ===
+	@Override
+	@Transactional(readOnly = true)
+	public List<PopupCardDTO> getMyPopups(Long userId){
+		
+		return popupRepository.findByOwnerId(userId)
+				.stream()
+				.map(popup->{
+					List<Image> images = imageRepository.findByTargetTypeAndTargetId("POPUP", popup.getId());
+					String thumbnailUrl = images.stream()
+							.filter(Image::isThumbnail)
+							.findFirst()
+							.map(Image::getAccessUrl)
+							.orElse(null);
+					
+					return PopupCardDTO.builder()
+							.id(popup.getId())
+							.title(popup.getTitle())
+							.address(popup.getAddress())
+							.startDate(popup.getStartDate())
+							.endDate(popup.getEndDate())
+							.price(popup.getPrice())
+							.viewCount(popup.getViewCount())
+							.thumbnailUrl(thumbnailUrl)
+							.build();
+				})
+				.toList();
+	}
 	
 }

@@ -26,4 +26,9 @@ public interface PopupService {
 	//카드 조회?
 	List<PopupCardDTO> getPopupCards();
 	
+	// === COMPANY ===
+	// 내가 등록한 팝업 조회
+
+	List<PopupCardDTO> getMyPopups(Long userId);
+	
 }

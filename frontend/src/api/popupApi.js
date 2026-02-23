@@ -54,6 +54,17 @@ export const deletePopup = async (id) => {
   }
 };
 
+// 내 팝업목록 조회
+export const getMyPopups = async () => {
+  try {
+    const response = await jwtAxios.get(`/api/popup/my`);
+    return response.data;
+  } catch (error) {
+    console.error("팝업 목록 조회 실패", error);
+    throw error;
+  }
+};
+
 // ----- 인증 필요 없는 API ----- (비회원도 조회는 가능해야함)
 
 //팝업 조회
