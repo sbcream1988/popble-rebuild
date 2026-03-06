@@ -5,7 +5,6 @@ const AuthPage = () => {
   return (
     <div>
       <BasicLayout>
-        <h1>Auth Page</h1>
         <Outlet></Outlet>
       </BasicLayout>
     </div>

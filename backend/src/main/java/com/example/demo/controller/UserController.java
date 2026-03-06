@@ -22,6 +22,7 @@ import com.example.demo.dto.UserDTO;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,7 +34,7 @@ public class UserController {
 	
 	// 회원 가입
 	@PostMapping("/signup")
-	public ResponseEntity<UserDTO> signup(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<UserDTO> signup(@Valid @RequestBody UserDTO userDTO) {
 		return ResponseEntity.ok(userService.signup(userDTO));
 	}
 	

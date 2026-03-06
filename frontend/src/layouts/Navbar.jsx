@@ -47,7 +47,7 @@ function Navbar() {
   }, [location]);
 
   return (
-    <div className="w-full h-20 bg-blue-200 flex justify-between items-center px-6">
+    <div className="w-full z-20 shadow-xl shadow-gray-300 h-20 bg-blue-200 flex justify-between items-center px-6">
       <Link to="/" className="" aria-label="Home">
         <div className="text-4xl">로고</div>
       </Link>
@@ -82,7 +82,7 @@ function Navbar() {
           )}
         </div>
         {/* 게시판 */}
-        <div className="relative">
+        <div className="relative z-20">
           <button
             onClick={() => setOpenMenu(openMenu === "board" ? null : "board")}
             className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
@@ -107,7 +107,7 @@ function Navbar() {
           )}
         </div>
         {/* 마이페이지 */}
-        <div className="relative">
+        <div className="relative z-20">
           <button
             onClick={() => setOpenMenu(openMenu === "myPage" ? null : "myPage")}
             className="relative font-bold text-blue-700 px-2 py-1 after:absolute after:left-0 after:-bottom-1 after:h-[3px] after:w-0 after:bg-blue-900 after:transition-all after:duration-300 hover:after:w-full"
@@ -115,20 +115,26 @@ function Navbar() {
             마이페이지
           </button>
           {openMenu === "myPage" && (
-            <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40">
+            <div className="absolute top-15 left-0 bg-white shadow-md rounded-md flex flex-col text-lg w-40 ">
               <Link to="/myPage/info" className="p-2 hover:bg-blue-100">
                 내 정보
               </Link>
-              <Link to="/myPage/reservation">내 예약</Link>
-              <Link to="/myPage/popups">내 팝업</Link>
+              <Link to="/myPage/reservation" className="p-2 hover:bg-blue-100">
+                내 예약
+              </Link>
+              <Link to="/myPage/popups" className="p-2 hover:bg-blue-100">
+                내 팝업
+              </Link>
             </div>
           )}
         </div>
         {/* 로그인 */}
         {isLoggedIn ? (
           <>
-            <span className="text-sm">{user?.nickname}님 환영합니다</span>
-            <button onClick={handleLogout} className="bg-white">
+            <button
+              onClick={handleLogout}
+              className="p-2 m-2 font-bold text-blue-700"
+            >
               로그아웃
             </button>
           </>

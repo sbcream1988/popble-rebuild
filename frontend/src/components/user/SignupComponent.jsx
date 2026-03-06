@@ -2,8 +2,11 @@ import DatePicker from "react-datepicker";
 import { signup } from "../../api/userApi";
 import { Controller, useForm } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router";
 
 function SignupComponent() {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -27,6 +30,7 @@ function SignupComponent() {
       const result = await signup(data);
       console.log("회원가입 성공", result);
       alert("회원가입 성공");
+      navigate("/auth/login");
     } catch (e) {
       console.error("회원가입 실패", e);
       alert("회원가입 실패");
@@ -34,9 +38,13 @@ function SignupComponent() {
   };
 
   return (
-    <div>
-      <h1>회원가입 페이지</h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="m-4 p-4">
+    <div className="w-full min-h-screen flex flex-col justify-center items-center">
+      <h1 className="text-3xl font-bold mb-10">회원가입</h1>
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="m-4 p-4 w-full max-w-lg flex flex-col items-center gap-6 border border-gray-200 rounded-3xl"
+      >
         {/* 이메일 */}
         <InputField
           label="이메일"
@@ -83,14 +91,14 @@ function SignupComponent() {
         {/* 닉네임 */}
         <InputField label="닉네임" name="nickname" register={register} />
         {/* 생일 */}
-        <div className="flex flex-row justify-center items-center">
-          <label className="mb-1 font-medium">생일</label>
+        <div className="flex flex-col gap-1 w-full max-w-md items-start">
+          <label className="font-bold">생일</label>
           <Controller
             control={control}
             name="birthday"
             render={({ field }) => (
               <DatePicker
-                className="p-2 border border-black rounded-4xl"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
                 placeholderText="생일 선택"
                 selected={field.value}
                 onChange={field.onChange}
@@ -122,7 +130,7 @@ function SignupComponent() {
         {/* 회원 가입 버튼 */}
         <button
           type="submit"
-          className="m-2 p-3 rounded-4xl bg-blue-400 flex justify-center cursor-pointer"
+          className="mt-10 p-3 rounded-4xl bg-blue-200 cursor-pointer "
         >
           회원가입
         </button>
@@ -144,15 +152,15 @@ function InputField({
   required,
 }) {
   return (
-    <div className="m-2 p-2 flex flex-row justify-center">
-      <div className="m-2 w1/5">{label}</div>
+    <div className="flex flex-col gap-1 w-full max-w-md items-start">
+      <label className="font-bold">{label}</label>
       <input
-        className="p-2 border border-black rounded-4xl w-1/5"
+        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         type={type}
         placeholder={placeholder}
         {...register(name, { required })}
       ></input>
-      {error && <p className="text-red-500 text-sm">{error.message}</p>}
+      {error && <p className="text-red-500 text-xs">{error.message}</p>}
     </div>
   );
 }

@@ -43,6 +43,8 @@ public class SecurityConfig {
 				.requestMatchers("/api/reservation/**").authenticated()
 				// 게시판 작성/수정은 USER이상만
 				.requestMatchers("/api/board/**").hasAnyRole("USER","COMPANY","ADMIN")
+				// 회원 탈퇴
+				.requestMatchers(HttpMethod.DELETE,"/api/user/me").authenticated()
 				//=== Company / Admin만 사용 ===
 				// 작성
 				.requestMatchers(HttpMethod.POST, "/api/popup/**").hasAnyRole("COMPANY","ADMIN")
@@ -73,7 +75,8 @@ public class SecurityConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.addAllowedOrigin("http://localhost:5173");
+//		configuration.addAllowedOrigin("http://localhost:5173");
+		configuration.setAllowedOrigins(List.of("http://localhost:5173","http://"));
 		configuration.addAllowedMethod("*");
 		configuration.addAllowedHeader("*");
 		configuration.setAllowCredentials(true);

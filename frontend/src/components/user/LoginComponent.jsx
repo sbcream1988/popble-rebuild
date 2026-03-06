@@ -52,12 +52,14 @@ function LoginComponent() {
             type="email"
             {...register("email", { required: "아이디를 입력하세요" })}
             className="peer w-[360px] border-b-2 border-gray-300 bg-transparent py-3 px-1 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-500"
-            placeholder="아이디"
+            placeholder=""
           />
           <label
             className="absolute w-[360px] left-1 top-3 text-gray-500 text-sm transition-all
                             peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400
-                            peer-placeholder-shown:top-3 peer-focus:top-0 peer-focus:text-xs peer-focus:text-blue-500"
+                            peer-placeholder-shown:top-3
+                            peer-focus:top-0 peer-focus:text-xs peer-focus:text-blue-500
+                            peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:text-xs"
           >
             아이디
           </label>
@@ -72,12 +74,14 @@ function LoginComponent() {
             className="peer w-[360px] border-b-2 border-gray-300 bg-transparent py-3 px-1 text-gray-900 placeholder-transparent focus:outline-none focus:border-blue-500"
             id="password"
             type="password"
+            placeholder=""
             {...register("password", { required: "비밀번호를 입력하세요" })}
           />
           <label
             className="absolute w-[360px] left-1 top-3 text-gray-500 text-sm transition-all 
                             peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 
-                            peer-placeholder-shown:top-3 peer-focus:top-0 peer-focus:text-xs peer-focus:text-blue-500"
+                            peer-placeholder-shown:top-3 peer-focus:top-0 peer-focus:text-xs peer-focus:text-blue-500
+                            peer-not-placeholder-shown:top-0 peer-not-placeholder-shown:text-xs"
           >
             비밀번호
           </label>
@@ -91,7 +95,7 @@ function LoginComponent() {
         {/* 로그인 버튼 */}
         <button
           type="submit"
-          className="w-[360px] p-2 rounded-2xl text-xl tracking-widest bg-purple-400 hover:bg-purple-500 border-0 border-purple-500 text-white transition duration-200"
+          className="w-[360px] p-2 rounded-2xl text-xl tracking-widest bg-purple-300 hover:bg-purple-400 border-0 border-purple-500 text-white transition duration-200"
         >
           로 그 인
         </button>
